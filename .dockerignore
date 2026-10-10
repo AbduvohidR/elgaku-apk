@@ -36,5 +36,4 @@ server_live.err.log
 start_server.bat
 Dockerfile
 .dockerignore
-docker-entrypoint.sh
 fly.toml
