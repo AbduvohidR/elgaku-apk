@@ -1,0 +1,25 @@
+# Render Blueprint — ELGAKU APK backend
+# Docs: https://render.com/docs/blueprint-spec
+#
+# Ishga tushirish:
+#   1. GitHub'da yangi repo oching (masalan: elgaku-apk)
+#   2. Shu papkani (C:\Users\Гангстер\ELGAKUPRO) o'sha repo'ga push qiling
+#   3. Render dashboard → New → Blueprint → repo'ni tanlang → Apply
+#
+# Eslatma: bepul tarifda disk YO'Q, shuning uchun elgaku.db har restart'da
+# konteyner bilan birga qayta tiklanadi. Doimiy ma'lumot kerak bo'lsa,
+# keyinchalik $1/oylik 1GB diskni dashboard'dan qo'shish mumkin.
+
+services:
+  - type: web
+    name: elgaku-apk
+    runtime: python
+    plan: free
+    region: singapore        # Osiyoga eng yaqin (Toshkentdan ping ~120ms)
+    branch: main
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python server.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.5"
+      # Render PORT'ni avtomatik beradi — server.py uni o'qiydi (os.environ["PORT"])

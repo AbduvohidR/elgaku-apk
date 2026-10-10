@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ELGAKU PRO — Yaratilgan funksiyalar qo'llanmasi</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%23F97316'/%3E%3Cpath d='M7 17V7h2.2l5.4 7.1V7H17v10h-2.2L9.4 9.9V17H7z' fill='%23fff'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#1a1c1e; --mut:#6b7280; --line:#e5e3dd; --bg:#f7f7f3;
+    --card:#ffffff; --accent:#f97316; --accent-soft:#fff3e6;
+    --navy:#12304f; --ok:#0f8a4d; --warn:#b45309;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:"Segoe UI", system-ui, -apple-system, "Noto Sans", Arial, sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.65; font-size:15.5px;
+  }
+  .wrap{max-width:980px; margin:0 auto; padding:0 22px 80px;}
+  /* ===== Header ===== */
+  header.hero{
+    background:linear-gradient(135deg,#12304f 0%,#1b4a74 60%,#2a5f8f 100%);
+    color:#fff; padding:56px 22px 48px; text-align:center;
+  }
+  header.hero .logo{display:inline-flex; align-items:center; gap:12px; margin-bottom:14px;}
+  header.hero .logo .mark{width:46px;height:46px;border-radius:12px;background:var(--accent);
+    display:inline-flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;}
+  header.hero h1{font-size:30px; font-weight:800; letter-spacing:.3px;}
+  header.hero p.sub{color:#cfe0f2; margin-top:10px; font-size:16px; max-width:640px; margin-left:auto; margin-right:auto;}
+  .meta-strip{display:flex; gap:10px; justify-content:center; margin-top:22px; flex-wrap:wrap;}
+  .meta-strip span{background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.22);
+    padding:6px 14px; border-radius:999px; font-size:13px;}
+  /* ===== Nav ===== */
+  nav.toc{background:var(--card); border:1px solid var(--line); border-radius:14px;
+    padding:18px 22px; margin:34px 0 40px;}
+  nav.toc h2{font-size:15px; color:var(--navy); margin-bottom:12px; letter-spacing:.4px;}
+  nav.toc ol{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:8px 24px;
+    padding-left:20px; font-size:14px;}
+  nav.toc a{color:var(--ink); text-decoration:none; border-bottom:1px solid transparent;}
+  nav.toc a:hover{color:var(--accent); border-bottom-color:var(--accent);}
+  /* ===== Sections ===== */
+  section.block{background:var(--card); border:1px solid var(--line); border-radius:16px;
+    padding:34px 36px; margin-bottom:34px;}
+  section.block .num{display:inline-flex; align-items:center; justify-content:center;
+    width:34px; height:34px; border-radius:10px; background:var(--accent); color:#fff;
+    font-weight:800; font-size:16px; margin-right:12px; vertical-align:middle;}
+  section.block h2{font-size:23px; font-weight:800; color:var(--navy); display:inline; vertical-align:middle;}
+  section.block .role{display:inline-block; margin-left:10px; font-size:12.5px; color:var(--mut);
+    border:1px solid var(--line); border-radius:999px; padding:3px 12px; vertical-align:middle;}
+  section.block h3{font-size:17px; margin:26px 0 8px; color:var(--navy);}
+  section.block p{margin:8px 0;}
+  ul.tasks{list-style:none; margin:10px 0 14px;}
+  ul.tasks li{position:relative; padding:6px 0 6px 30px;}
+  ul.tasks li::before{content:""; position:absolute; left:6px; top:13px; width:11px; height:11px;
+    border-radius:3px; background:var(--accent-soft); border:2px solid var(--accent);}
+  .flow{display:flex; flex-wrap:wrap; gap:0; align-items:stretch; margin:18px 0 6px; counter-reset:step;}
+  .flow .node{flex:1 1 150px; background:var(--accent-soft); border:1px solid #fcd9b8; border-radius:12px;
+    padding:12px 14px; text-align:center; font-size:13.5px; position:relative; min-width:140px;}
+  .flow .node b{display:block; font-size:14px; color:var(--navy); margin-top:4px;}
+  .flow .node::before{counter-increment:step; content:counter(step); position:absolute; top:-9px; left:12px;
+    background:var(--accent); color:#fff; width:20px; height:20px; border-radius:50%;
+    font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center;}
+  .flow .arr{align-self:center; color:var(--accent); font-size:20px; padding:0 6px;}
+  figure{ margin:18px 0 6px;}
+  figure img{max-width:540px; width:100%; margin:0 auto; border:1px solid var(--line); border-radius:12px; display:block; background:#fff;}
+  figure.wide img{max-width:100%;}
+  figcaption{font-size:13px; color:var(--mut); margin-top:8px; text-align:center;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:18px;}
+  .note{background:#f0f7ff; border:1px solid #cfe2f7; border-radius:12px; padding:14px 18px; margin:14px 0; font-size:14.5px;}
+  .note.ok{background:#effaf3; border-color:#c4e8d3;}
+  .note b{color:var(--navy);}
+  table{width:100%; border-collapse:collapse; margin:14px 0; table-layout:fixed; font-size:14px;}
+  colgroup col:first-child{width:26%;}
+  table th, table td{border:1px solid var(--line); padding:9px 12px; text-align:left; vertical-align:top;}
+  table th{background:var(--accent-soft); color:var(--navy); font-weight:700;}
+  code{background:#f1f0ec; border-radius:6px; padding:1px 7px; font-size:13px;
+    font-family:Consolas, "Courier New", monospace;}
+  .api{background:#0f172a; color:#e2e8f0; border-radius:12px; padding:14px 18px; font-size:13.5px;
+    font-family:Consolas, monospace; overflow-x:auto; margin:12px 0;}
+  .api .m{color:#7dd3fc;}
+  footer{margin-top:10px; color:var(--mut); font-size:13px; text-align:center;}
+  @media(max-width:720px){
+    body{font-size:15px;}
+    section.block{padding:24px 20px;}
+    .grid2{grid-template-columns:1fr;}
+    header.hero h1{font-size:24px;}
+    .flow .arr{transform:rotate(90deg); padding:4px 0;}
+  }
+  @media print{
+    body{background:#fff; font-size:12.5px;}
+    section.block{break-inside:auto; box-shadow:none; border-color:#ccc;}
+    figure{break-inside:avoid; page-break-inside:avoid;}
+    figure img{max-width:88%; margin:0 auto;}
+    .flow .node{break-inside:avoid;}
+    header.hero{background:#12304f !important; -webkit-print-color-adjust:exact; print-color-adjust:exact;}
+    nav.toc{break-after:page;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="logo">
+    <span class="mark">E</span>
+    <span style="font-size:22px;font-weight:800;letter-spacing:1px;">ELGAKU PRO</span>
+  </div>
+  <h1>Yaratilgan funksiyalar — qo'llanma va ishlash tushuntirishi</h1>
+  <p class="sub">Zal egalari, ko'ngil ochar markazlar, operator va resepshn uchun yagona boshqaruv tizimi: kassa nazorati, komissiya, xavfsizlik va zaxiralash to'liq avtomatlashtirilgan.</p>
+  <div class="meta-strip">
+    <span>Versiya: 2.6</span>
+    <span>Server: Python + SQLite (WAL)</span>
+    <span>Port: 8000</span>
+    <span>Til: O'zbek / Рус / EN</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+<nav class="toc">
+  <h2>MAZMUNI</h2>
+  <ol>
+    <li><a href="#s1">Kirish tizimi (login.html)</a></li>
+    <li><a href="#s2">Bosh sahifa (index.html)</a></li>
+    <li><a href="#s3">Zal egasi paneli (owner.html)</a></li>
+    <li><a href="#s4">Resepshn paneli (reception.html)</a></li>
+    <li><a href="#s5">Operator paneli (operator.html)</a></li>
+    <li><a href="#s6">Naqd to'lov — kassa sinxronizatsiyasi</a></li>
+    <li><a href="#s7">Xavfsizlik tizimi</a></li>
+    <li><a href="#s8">Barqarorlik va texnik tuzatishlar</a></li>
+  </ol>
+</nav>
+
+<!-- ============ 1. KIRISH ============ -->
+<section class="block" id="s1">
+  <span class="num">1</span><h2>Kirish tizimi</h2><span class="role">login.html</span>
+  <p>Tizimga kim kirishini aniqlash uchun <b>3 alohida kirish yo'li</b> yaratilgan. Parollar hech qachon brauzerda saqlanmaydi — hammasi serverda tekshiriladi.</p>
+  <ul class="tasks">
+    <li><b>Zal egasimisiz?</b> — login va parol bilan panelga kirish (owner.html).</li>
+    <li><b>Boshqa (Mijoz)</b> — telefon raqami orqali mijoz sifatida kirish.</li>
+    <li><b>Resepshn</b> — ko'ngil ochar markazlar uchun bron, to'lov va kassa paneli (reception.html).</li>
+  </ul>
+  <p>Xavfsizlik: login so'rovlari <code>/api/auth/super/check</code> va <code>/api/auth/employee/check</code> orqali serverda tekshiriladi; operator seansida parol umuman saqlanmaydi. Ilgari captcha ishlamayotgan edi — u tuzatildi va yangi seans tekshiruvi qo'shildi.</p>
+  <figure>
+    <img src="assets/01_login.png" alt="Kirish sahifasi">
+    <figcaption>1-rasm. Kirish sahifasi — uch yo'nalish: zal egasi, mijoz, resepshn</figcaption>
+  </figure>
+</section>
+
+<!-- ============ 2. BOSH SAHIFA ============ -->
+<section class="block" id="s2">
+  <span class="num">2</span><h2>Bosh sahifa</h2><span class="role">index.html</span>
+  <p>Platforma uchun tashqi ko'rinish sahifasi: tizimda ro'yxatdan o'tgan zallar va markazlar, statistika (faol markazlar, reyting) ko'rsatiladi. Kirish bo'limiga <b>Resepshn</b> va <b>Zal egasi paneli</b> tugmalari qo'shildi — foydalanuvchi rolini tanlab kerakli panelga o'tadi.</p>
+  <figure>
+    <img src="assets/02_index.png" alt="Bosh sahifa">
+    <figcaption>2-rasm. Bosh sahifa — platforma taqdimoti va kirish yo'llari</figcaption>
+  </figure>
+</section>
+
+<!-- ============ 3. ZAL EGASI ============ -->
+<section class="block" id="s3">
+  <span class="num">3</span><h2>Zal egasi paneli</h2><span class="role">owner.html</span>
+  <p>Zal egasi uchun shaxsiy panel — o'z zali/markazini to'liq boshqaradi. Panel boshidan oxirigacha qayta ishlab chiqilgan va quyidagi funksiyalar qo'shilgan:</p>
+  <ul class="tasks">
+    <li><b>Kassa — pul oldi/berdi nazorati:</b> kirim, chiqim yozish, kassadagi qoldiq, smena yopish (<code>GET/POST /api/owner/cash</code>, <code>close</code>).</li>
+    <li><b>Balans bloki:</b> jami tushum, komissiya (foiz bo'yicha), toza daromad, kutilayotgan yechim.</li>
+    <li><b>Abonementlar:</b> faol obunalar, muddati tugayotganlar (7 kun) — muddat tugashini oldindan ko'rsatadi.</li>
+    <li><b>Paketlar, sharhlar, zallar:</b> xizmat paketlari, mijoz sharhlari, filiallar ro'yxati.</li>
+    <li><b>Parol o'zgartirish:</b> <code>PUT /api/owner/password</code> — eski parol tasdiqlanib yangisi o'rnatiladi (kamida 6 belgi).</li>
+    <li><b>TV panel va resepshn rejimi</b> — ko'ngil ochar markazlar uchun.</li>
+  </ul>
+  <div class="grid2">
+    <figure><img src="assets/07_owner_dash.png" alt="Zal egasi paneli"><figcaption>3-rasm. Zal egasi paneli — asosiy ko'rinish</figcaption></figure>
+    <figure><img src="assets/08_owner_kassa.png" alt="Zal egasi moliyasi"><figcaption>4-rasm. Balans, abonementlar va eshik bloki</figcaption></figure>
+  </div>
+</section>
+
+<!-- ============ 4. RESEPSHN ============ -->
+<section class="block" id="s4">
+  <span class="num">4</span><h2>Resepshn paneli (ko'ngil ochar markazlar)</h2><span class="role">reception.html</span>
+  <p>User talabiga ko'ra: <b>agar zal bo'lsa — resepshn kerak emas</b>, lekin ko'ngil ochar markazlar uchun resepshn paneli yaratildi (KTV, bilyard va boshqalar uchun). Panel real vaqt rejimida ishlaydi:</p>
+  <ul class="tasks">
+    <li><b>Boshqaruv:</b> bron qabul qilish, xonalar/stollar bandligi.</li>
+    <li><b>To'lov qabul:</b> mijozdan pul qabul qilish — darhol kassaga (cashbox) kirim sifatida yoziladi, to'lov holati «TO'LANDI» bo'ladi.</li>
+    <li><b>Kassa ko'rsatkichlari:</b> bugungi kirim, chiqim, kassadagi qoldiq, farq.</li>
+    <li><b>Voqealar jurnali:</b> bugungi bronlar va o'zgarishlar (masalan «Yangi bron: 3-xona — Aziz»).</li>
+    <li><b>TV panel rejimi:</b> zal ekranida navbat/afisha ko'rsatish.</li>
+    <li><b>Parol o'zgartirish</b> — resepshn xodimi uchun.</li>
+  </ul>
+  <figure>
+    <img src="assets/09_reception_dash.png" alt="Resepshn paneli">
+    <figcaption>5-rasm. Resepshn paneli — karaoke markaz misolida</figcaption>
+  </figure>
+</section>
+
+<!-- ============ 5. OPERATOR ============ -->
+<section class="block" id="s5">
+  <span class="num">5</span><h2>Operator paneli</h2><span class="role">operator.html</span>
+  <p>Operator (super-admin) butun tizimni boshqaradi. Panelda bir nechta katta bo'lim mavjud: <b>Komissiya va to'lovlar</b> (buxgalteriya), <b>Pul nazorati (Kassa)</b> (operativ pul), <b>Xavfsizlik</b> (audit, zaxira, parollar).</p>
+
+  <h3>5.1 Komissiya va to'lovlar — buxgalteriya qavati</h3>
+  <ul class="tasks">
+    <li><b>To'lovlar:</b> barcha to'lovlar ro'yxati, qidiruv, holatlar.</li>
+    <li><b>Komissiya:</b> har bir zal uchun ELGAKU komissiya foizi va hisoblar.</li>
+    <li><b>Faktura:</b> E-SF formatidagi hisob-faktura avtomatik raqamlanadi (P-2026-XXX), QQS 12% hisoblanadi.</li>
+    <li><b>Refundlar:</b> qaytarilgan to'lovlarni qayd etish.</li>
+    <li><b>Rekonsilyatsiya:</b> bank bilan hisob-kitobni solishtirish.</li>
+    <li><b>Sozlamalar:</b> bank ma'lumotlari (STIR, MFO, maxsus hisobvaraq), QQS stavkasi.</li>
+    <li><b>Naqd to'lovni belgilash:</b> mijozdan naqd qabul qilish — <b>endilikda bu kassaga ham yoziladi</b> (6-bo'limda batafsil).</li>
+  </ul>
+  <figure>
+    <img src="assets/04_operator_komissiya.png" alt="Komissiya va to'lovlar">
+    <figcaption>6-rasm. Komissiya va to'lovlar — faktura, komissiya, refundlar, rekonsilyatsiya</figcaption>
+  </figure>
+
+  <h3>5.2 Pul nazorati (Kassa) — operativ pul qavati</h3>
+  <p>Bu bo'lim kassadagi haqiqiy pulni kuzatadi va 8 ta yorliqdan iborat:</p>
+  <ul class="tasks">
+    <li><b>Kassa jurnali:</b> har bir kirim/chiqim yozuvi, yo'nalish bo'yicha filtr.</li>
+    <li><b>Zallar bo'yicha:</b> har zalning kassa holati.</li>
+    <li><b>Zallar to'lovlari:</b> mijoz to'lovlari, holatni o'zgartirish (TO'LANDI / bekor).</li>
+    <li><b>Yechishlar:</b> egasiga pul chiqarish so'rovlari, operator tasdig'i.</li>
+    <li><b>Rekonsilyatsiya:</b> zal bo'yicha kunlik hisob (bugun / jami / kassa).</li>
+    <li><b>Paketlar, Sharhlar, Abonementlar:</b> tizim bo'ylab ko'rish va boshqarish.</li>
+  </ul>
+  <div class="note ok"><b>Muhim:</b> «Komissiya va to'lovlar» buxgalteriya qavati, «Pul nazorati» esa operativ kassa qavati — ular bir-birini to'ldiradi, dublikat emas. Endi ular bir-biriga bog'langan (6-bo'lim).</div>
+  <figure>
+    <img src="assets/05_operator_kassa.png" alt="Pul nazorati Kassa">
+    <figcaption>7-rasm. Pul nazorati (Kassa) — jami balans, kirim, chiqim, yechishlar</figcaption>
+  </figure>
+
+  <h3>5.3 Xavfsizlik bo'limi</h3>
+  <ul class="tasks">
+    <li><b>Audit jurnali:</b> har bir muhim harakat qayd etiladi (kim, qachon, nima qildi).</li>
+    <li><b>Xavfsizlik hodisalari:</b> muvaffaqiyatsiz kirish urinishlari va bloklar.</li>
+    <li><b>Zaxiralar (backups):</b> bazaning nusxalari, oxirgi zaxira vaqti; yangi zaxira yaratish.</li>
+    <li><b>Parollar:</b> zal parollarini tiklash va super parolni o'zgartirish.</li>
+  </ul>
+  <figure>
+    <img src="assets/06_operator_xavfsizlik.png" alt="Xavfsizlik bo'limi">
+    <figcaption>8-rasm. Xavfsizlik — audit, hodisalar, zaxiralar, parollar</figcaption>
+  </figure>
+
+  <h3>5.4 Operator dashboard</h3>
+  <p>Umumiy ko'rinish: yangi egasini ro'yxatdan o'tkazish (Excel yuklash, avtomatik login yaratish), barcha zallar ro'yxati va ularning holati, komissiya foizi.</p>
+  <figure>
+    <img src="assets/03_operator_dash.png" alt="Operator dashboard">
+    <figcaption>9-rasm. Operator dashboard — zallar ro'yxati va egasini ro'yxatga olish</figcaption>
+  </figure>
+</section>
+
+<!-- ============ 6. SINXRON ============ -->
+<section class="block" id="s6">
+  <span class="num">6</span><h2>Naqd to'lov — kassa sinxronizatsiyasi</h2>
+  <p>Bu <b>eng muhim yangi funksiya</b>. Ilgari operator «Komissiya va to'lovlar» bo'limida naqd to'lovni belgilaganda, u faqat lokal ro'yxatga yozilar edi va kassaga tushmasdi — pul nazorati bilan mos kelmasdi. Endi bitta tugma bilan hamma joyga yoziladi:</p>
+  <div class="flow">
+    <div class="node">Operator «Naqd to'lovni belgilash» oynasini ochadi<b>payCashModal()</b></div>
+    <div class="arr">→</div>
+    <div class="node">Zal, mijoz, summa, usul kiritiladi<b>payCashSave()</b></div>
+    <div class="arr">→</div>
+    <div class="node">Faktura raqami avtomatik (P-2026-XXX)<b>Hisob-faktura</b></div>
+    <div class="arr">→</div>
+    <div class="node">Server: POST /api/operator/cash-pay<b>hall_payments + cashbox kirim</b></div>
+    <div class="arr">→</div>
+    <div class="node">Audit jurnali + Telegram xabar<b>kuzatuv</b></div>
+  </div>
+  <p>Natijada: to'lov bir vaqtning o'zida <b>faktura ro'yxatida</b>, <b>kassa jurnalida</b> (kirim) va <b>zallar to'lovlarida</b> («TO'LANDI») ko'rinadi. Operator interfeysda «To'lov kassaga ham qayd etildi» xabari chiqadi.</p>
+  <figure>
+    <img src="assets/10_operator_naqd_tolov.png" alt="Naqd to'lovni belgilash oynasi">
+    <figcaption>10-rasm. Naqd to'lovni belgilash oynasi — faktura bilan qabul qilish</figcaption>
+  </figure>
+  <div class="api">POST <span class="m">/api/operator/cash-pay</span><br>
+  { hall: "Navro'z KTV", client: "Ism Familiya", phone: "+998…", amount: 50000, method: "Naqd", note: "3 oylik obuna" }<br>
+  → 200 {ok: true} &nbsp;|&nbsp; 403 (huquq yo'q) &nbsp;|&nbsp; 404 (zal topilmadi)</div>
+</section>
+
+<!-- ============ 7. XAVFSIZLIK ============ -->
+<section class="block" id="s7">
+  <span class="num">7</span><h2>Xavfsizlik tizimi</h2>
+  <p>Tizim bo'ylab xavfsizlik uchun barcha tashkiliy ishlar bajarildi:</p>
+  <table>
+    <colgroup><col><col></colgroup>
+    <tr><th>Mexanizm</th><th>Vazifasi</th></tr>
+    <tr><td>audit_log jadvali + audit()</td><td>Har bir muhim harakat (kirish, to'lov, parol, yechish) kim tomonidan va qachon qilinganini qayd qiladi.</td></tr>
+    <tr><td>backup_db()</td><td>Baza nusxasi backups/ papkasiga avtomatik va qo'lda yaratiladi (14 nusxagacha saqlanadi).</td></tr>
+    <tr><td>Parol serverda tekshiriladi</td><td>Super/employee parollari brauzerga yuborilmaydi; /api/auth/super endi parol qaytarmaydi.</td></tr>
+    <tr><td>API himoyasi</td><td>Zallar, xodimlar, kassa, audit — faqat operator (X-Elgaku-Login) huquqi bilan; oddiy zal egasi 403 oladi.</td></tr>
+    <tr><td>Parol siyosati</td><td>Yangi parol kamida 6 belgi; eski parol tasdiqlanishi shart.</td></tr>
+    <tr><td>Telegram ogohlantirish</td><td>Muhim operatsiyalar (to'lov, yechish) Telegram orqali xabar qilinadi.</td></tr>
+  </table>
+</section>
+
+<!-- ============ 8. BARQARORLIK ============ -->
+<section class="block" id="s8">
+  <span class="num">8</span><h2>Barqarorlik va texnik tuzatishlar</h2>
+  <p>Sinov davomida topilgan muammolar va ularning yechimlari:</p>
+  <table>
+    <colgroup><col><col></colgroup>
+    <tr><th>Muammo</th><th>Yechim</th></tr>
+    <tr><td><b>«database is locked»</b> — sahifalar ochilmay qolardi (ERR_EMPTY_RESPONSE)</td><td>SQLite ulanishiga timeout=20 va busy_timeout=15000 qo'shildi; tashrif statistikasi xatosi sahifani buzmaydi; chat tozalash daqiqada 1 marta cheklandi va indeks qo'shildi.</td></tr>
+    <tr><td>Kassa va komissiya bir-biridan ajralgan edi</td><td>/api/operator/cash-pay sinxronizatsiyasi — endi bitta to'lov hamma joyda ko'rinadi.</td></tr>
+    <tr><td>Test yozuvlari kassada qolgan</td><td>Tozalandi; bazaning zaxira nusxalari saqlanadi (elgaku_*.db).</td></tr>
+    <tr><td>Captcha ishlamasdi</td><td>Yangilangan autentifikatsiya oqimi bilan tuzatildi.</td></tr>
+  </table>
+  <div class="note"><b>Ishga tushirish:</b> <code>start_server.bat</code> yoki <code>python server.py</code> — server 8000-portda ishlaydi. Sahifalar: <code>http://localhost:8000/index.html</code>, <code>login.html</code>, <code>operator.html</code>, <code>owner.html</code>, <code>reception.html</code>.</div>
+</section>
+
+<footer>ELGAKU PRO — funksiyalar qo'llanmasi · Server: Python/HTTPServer + SQLite · 2026-yil, oktabr</footer>
+</div>
+</body>
+</html>

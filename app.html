@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>ELGAKU</title>
+<link rel="icon" href="images/app-logo.jpg" />
+<style>
+:root{
+  --orange:#F97316; --orange-d:#EA580C; --amber:#FB923C;
+  --ink:#111827; --gray:#6B7280; --line:#E5E7EB; --bg:#F6F7F9;
+  --green:#16A34A; --red:#DC2626;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  background:#e9ebee;color:var(--ink);
+  display:flex;justify-content:center;align-items:stretch;
+}
+#app{
+  width:100%;max-width:480px;height:100dvh;background:var(--bg);
+  position:relative;overflow:hidden;display:flex;flex-direction:column;
+  box-shadow:0 0 40px rgba(0,0,0,.12);
+}
+/* ---------- SPLASH ---------- */
+#splash{
+  position:absolute;inset:0;z-index:100;background:linear-gradient(160deg,#FDE68A,#FB923C 55%,#F97316);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+  transition:opacity .5s;
+}
+#splash.hide{opacity:0;pointer-events:none;}
+#splash img{width:130px;height:130px;border-radius:32px;box-shadow:0 12px 40px rgba(0,0,0,.25);background:#fff;}
+#splash h1{color:#fff;font-size:34px;font-weight:900;letter-spacing:2px;}
+#splash p{color:rgba(255,255,255,.9);font-size:14px;font-weight:500;}
+/* ---------- SCREENS ---------- */
+.screen{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:78px;display:none;}
+.screen.active{display:block;}
+/* top bar */
+.topbar{
+  position:sticky;top:0;z-index:10;background:var(--bg);
+  padding:14px 16px 10px;
+}
+.topbar .row1{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.city{display:flex;align-items:center;gap:5px;font-weight:700;font-size:14px;}
+.city .dot{width:8px;height:8px;border-radius:50%;background:var(--orange);}
+.lang{display:flex;background:#fff;border:1px solid var(--line);border-radius:999px;overflow:hidden;}
+.lang button{border:0;background:transparent;padding:5px 10px;font-size:12px;font-weight:700;color:var(--gray);cursor:pointer;}
+.lang button.on{background:var(--orange);color:#fff;}
+.search{
+  display:flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);
+  border-radius:14px;padding:11px 14px;
+}
+.search input{border:0;outline:0;flex:1;font-size:14px;background:transparent;}
+.search .ic{color:var(--gray);}
+/* categories */
+.cats{display:flex;gap:8px;overflow-x:auto;padding:4px 16px 12px;scrollbar-width:none;}
+.cats::-webkit-scrollbar{display:none;}
+.cat{
+  flex:0 0 auto;display:flex;align-items:center;gap:6px;background:#fff;border:1px solid var(--line);
+  border-radius:999px;padding:8px 14px;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;
+}
+.cat.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+.cat .e{font-size:15px;}
+/* section title */
+.sec-title{font-size:18px;font-weight:800;padding:6px 16px 10px;display:flex;align-items:center;gap:8px;}
+/* hall cards */
+.hall{
+  background:#fff;border-radius:18px;margin:0 16px 14px;overflow:hidden;cursor:pointer;
+  border:1px solid #eee;
+}
+.hall .ph{height:130px;position:relative;display:flex;align-items:center;justify-content:center;font-size:52px;color:#fff;}
+.hall .ph.gym{background:linear-gradient(135deg,#ff9966,#ff5e62);}
+.hall .ph.wellness{background:linear-gradient(135deg,#56ab2f,#a8e063);}
+.hall .ph.game{background:linear-gradient(135deg,#8e2de2,#4a00e0);}
+.hall .ph.karaoke{background:linear-gradient(135deg,#fc466b,#3f5efb);}
+.hall .ph.bilyard{background:linear-gradient(135deg,#11998e,#38ef7d);}
+.hall .ph.bouling{background:linear-gradient(135deg,#f7971e,#ffd200);}
+.hall .ph.kart{background:linear-gradient(135deg,#232526,#414345);}
+.hall .ph.boshqa{background:linear-gradient(135deg,#2980b9,#6dd5fa);}
+.hall .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.badge24{position:absolute;bottom:10px;left:10px;background:#DCFCE7;color:#15803d;font-size:10px;font-weight:800;padding:3px 9px;border-radius:999px;}
+.rt{position:absolute;top:10px;right:10px;background:rgba(255,255,255,.95);color:#b45309;font-size:11px;font-weight:800;padding:3px 8px;border-radius:999px;}
+.hall .bd{padding:12px 13px 13px;}
+.hall .nm{font-size:16px;font-weight:800;}
+.hall .ad{font-size:12px;color:var(--gray);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.hall .ft{display:flex;justify-content:space-between;align-items:center;margin-top:9px;padding-top:9px;border-top:1px solid #f3f4f6;}
+.hall .hrs{font-size:11.5px;color:var(--gray);font-weight:600;}
+.hall .go{font-size:12px;font-weight:700;color:var(--orange);}
+.empty{text-align:center;color:var(--gray);padding:50px 20px;font-size:14px;}
+/* ---------- BOTTOM NAV ---------- */
+#nav{
+  position:absolute;bottom:0;left:0;right:0;height:72px;background:#fff;border-top:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-around;z-index:20;padding-bottom:6px;
+}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px;font-weight:700;color:var(--gray);cursor:pointer;}
+.nav-item .e{font-size:21px;}
+.nav-item.on{color:var(--orange);}
+#nav .scan{
+  width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#FB923C,#F97316);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;margin-top:-26px;
+  box-shadow:0 8px 20px rgba(249,115,22,.45);cursor:pointer;border:4px solid #fff;
+}
+/* ---------- HALL DETAIL (overlay) ---------- */
+#detail{position:absolute;inset:0;background:var(--bg);z-index:40;display:none;flex-direction:column;}
+#detail.open{display:flex;}
+#detail .dh{height:200px;position:relative;display:flex;align-items:center;justify-content:center;font-size:80px;color:#fff;}
+#detail .back{position:absolute;top:14px;left:14px;width:38px;height:38px;border-radius:50%;background:rgba(0,0,0,.4);color:#fff;border:0;font-size:18px;cursor:pointer;z-index:5;}
+#detail .dbody{flex:1;overflow-y:auto;padding:0 16px 90px;}
+#detail .dname{font-size:22px;font-weight:900;margin:14px 0 4px;}
+#detail .dmeta{font-size:13px;color:var(--gray);line-height:1.6;}
+.chip{display:inline-block;background:#FFF7ED;color:var(--orange);font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px;margin:8px 6px 0 0;}
+.dsec{font-size:15px;font-weight:800;margin:20px 0 10px;}
+.pkg{background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+.pkg .t{font-size:14px;font-weight:800;}
+.pkg .d{font-size:12px;color:var(--gray);margin-top:2px;}
+.pkg .pr{text-align:right;}
+.pkg .now{font-size:15px;font-weight:900;color:var(--orange);}
+.pkg .old{font-size:11px;color:#9ca3af;text-decoration:line-through;}
+.mapbtn{
+  margin:14px 16px 0;width:calc(100% - 32px);background:var(--ink);color:#fff;border:0;border-radius:14px;
+  padding:14px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;
+}
+/* profile screen */
+.pf-hero{background:linear-gradient(135deg,#FB923C,#F97316);padding:28px 20px 34px;color:#fff;text-align:center;}
+.pf-hero .ava{width:74px;height:74px;border-radius:50%;background:rgba(255,255,255,.25);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:34px;}
+.pf-hero .nm{font-size:18px;font-weight:800;}
+.pf-hero .ph{font-size:13px;opacity:.9;margin-top:3px;}
+.pf-list{margin:14px;background:#fff;border-radius:16px;overflow:hidden;border:1px solid var(--line);}
+.pf-list .it{display:flex;justify-content:space-between;align-items:center;padding:15px 16px;border-bottom:1px solid #f3f4f6;font-size:14px;font-weight:600;}
+.pf-list .it:last-child{border-bottom:0;}
+.pf-list .it .r{color:var(--gray);}
+.login-box{padding:30px 24px;text-align:center;}
+.login-box input{width:100%;padding:14px;border:1px solid var(--line);border-radius:14px;font-size:16px;margin:10px 0;text-align:center;}
+.login-box button{width:100%;padding:15px;border:0;border-radius:14px;background:var(--orange);color:#fff;font-size:15px;font-weight:800;margin-top:8px;cursor:pointer;}
+.toast{position:absolute;bottom:90px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:11px 18px;border-radius:999px;font-size:13px;font-weight:600;z-index:60;opacity:0;transition:.25s;white-space:nowrap;}
+.toast.show{opacity:.95;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- SPLASH -->
+  <div id="splash">
+    <img src="images/app-logo.jpg" alt="ELGAKU" />
+    <h1>ELGAKU</h1>
+    <p id="splashTag">Sport va ko'ngilochar markazlar — bitta ilovada</p>
+  </div>
+
+  <!-- HOME -->
+  <div class="screen active" id="scr-home">
+    <div class="topbar">
+      <div class="row1">
+        <div class="city"><span class="dot"></span><span id="cityName">Toshkent</span></div>
+        <div class="lang">
+          <button data-l="uz" class="on">UZ</button>
+          <button data-l="ru">RU</button>
+          <button data-l="en">EN</button>
+        </div>
+      </div>
+      <div class="search">
+        <span class="ic">🔍</span>
+        <input id="searchInput" type="text" placeholder="Qidirish: zal, bilyard, KTV..." />
+      </div>
+    </div>
+    <div class="cats" id="cats"></div>
+    <div class="sec-title" id="listTitle">📍 <span>Markazlar</span></div>
+    <div id="hallList"></div>
+  </div>
+
+  <!-- MAP -->
+  <div class="screen" id="scr-map">
+    <div class="topbar"><div class="row1"><div class="city"><span class="dot"></span><span id="cityName2">Xarita</span></div></div></div>
+    <div class="sec-title">🗺️ <span>Yaqin atrofdagi markazlar</span></div>
+    <div id="mapList"></div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="screen" id="scr-profile">
+    <div id="profileGuest"></div>
+  </div>
+
+  <!-- HALL DETAIL -->
+  <div id="detail">
+    <button class="back" onclick="closeDetail()">←</button>
+    <div class="dh" id="dhHead"><span>🏋️</span></div>
+    <div class="dbody" id="dBody"></div>
+    <button class="mapbtn" onclick="openNav()"><span>🧭</span> <span id="navBtnText">Yo'l ko'rsatish</span></button>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div id="nav">
+    <div class="nav-item on" data-scr="scr-home"><span class="e">🏠</span><span data-i="home">Bosh sahifa</span></div>
+    <div class="nav-item" data-scr="scr-map"><span class="e">🗺️</span><span data-i="map">Xarita</span></div>
+    <div class="scan" onclick="toast('QR skaner — 2-bosqichda')">📷</div>
+    <div class="nav-item" data-scr="scr-profile"><span class="e">👤</span><span data-i="profile">Profil</span></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ============ i18n ============ */
+const I18N = {
+  uz:{home:"Bosh sahifa",map:"Xarita",profile:"Profil",markazlar:"Markazlar",search:"Qidirish: zal, bilyard, KTV...",
+      navBtn:"Yo'l ko'rsatish",loginTitle:"Kirish / Ro'yxatdan o'tish",phone:"Telefon raqami",sendKod:"Kod olish",
+      guestName:"Mehmon",soon:"Tez orada",packages:"Obunalar va paketlar",about:"Haqida",open24:"24/7 ochiq",
+      nearYou:"Yaqin atrofdagi markazlar"},
+  ru:{home:"Главная",map:"Карта",profile:"Профиль",markazlar:"Центры",search:"Поиск: зал, бильярд, KTV...",
+      navBtn:"Построить маршрут",loginTitle:"Вход / Регистрация",phone:"Номер телефона",sendKod:"Получить код",
+      guestName:"Гость",soon:"Скоро",packages:"Абонементы и пакеты",about:"О нас",open24:"Открыто 24/7",
+      nearYou:"Центры рядом"},
+  en:{home:"Home",map:"Map",profile:"Profile",markazlar:"Centers",search:"Search: gym, billiards, KTV...",
+      navBtn:"Get directions",loginTitle:"Login / Sign up",phone:"Phone number",sendKod:"Get code",
+      guestName:"Guest",soon:"Soon",packages:"Memberships & packages",about:"About",open24:"Open 24/7",
+      nearYou:"Centers near you"}
+};
+let L = "uz";
+const t = k => (I18N[L] && I18N[L][k]) || I18N.uz[k] || k;
+
+const TYPE_META = {
+  gym:{e:"🏋️",label:"Gym"}, wellness:{e:"🧘",label:"Wellness"},
+  karaoke:{e:"🎤",label:"Karaoke"}, bilyard:{e:"🎱",label:"Bilyard"},
+  game:{e:"🎮",label:"Game-klub"}, bouling:{e:"🎳",label:"Bouling"},
+  kart:{e:"🏎️",label:"Karting"}, boshqa:{e:"📍",label:"Boshqa"}
+};
+let HALLS = [];
+let curCat = "all";
+
+/* ============ helpers ============ */
+function toast(msg){
+  const el = document.getElementById("toast"); el.textContent = msg; el.classList.add("show");
+  clearTimeout(el._t); el._t = setTimeout(()=>el.classList.remove("show"),1800);
+}
+function esc(s){return (s||"").toString().replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function getDet(h,k,d=""){return (h.details&&h.details[k]!=null)?h.details[k]:d;}
+
+/* ============ load halls ============ */
+async function loadHalls(){
+  try{
+    const r = await fetch("/api/halls");
+    const all = await r.json();
+    HALLS = (all||[]).filter(h=>h.status==="active");
+    renderCats(); renderHome(); renderMap();
+  }catch(e){
+    document.getElementById("hallList").innerHTML = '<div class="empty">Serverga ulanish bo\'lmadi.<br>server.py ishlayaptimi?</div>';
+  }
+}
+function renderCats(){
+  const box = document.getElementById("cats");
+  const types = ["all",...new Set(HALLS.map(h=>h.type).filter(Boolean))];
+  box.innerHTML = `<div class="cat ${curCat==='all'?'on':''}" onclick="setCat('all')"><span class="e">✨</span><span>Hammasi</span></div>` +
+    types.filter(x=>x!=="all").map(ty=>{
+      const m = TYPE_META[ty]||TYPE_META.boshqa;
+      return `<div class="cat ${curCat===ty?'on':''}" onclick="setCat('${ty}')"><span class="e">${m.e}</span><span>${m.label}</span></div>`;
+    }).join("");
+}
+function setCat(c){curCat=c;renderCats();renderHome();}
+
+function hallCard(h){
+  const ty = TYPE_META[h.type]||TYPE_META.boshqa;
+  const addr = getDet(h,"address");
+  const hrs = getDet(h,"hours");
+  const h24 = getDet(h,"hours24",false);
+  const photo = getDet(h,"photos");
+  return `<div class="hall" onclick="openDetail(${h.id})">
+    <div class="ph ${h.type}">${photo?'<img src="'+esc(photo)+'">':ty.e}
+      ${h24?'<span class="badge24">24/7</span>':''}
+      ${h.rev_avg?'<span class="rt">★ '+h.rev_avg+'</span>':''}
+    </div>
+    <div class="bd">
+      <div class="nm">${esc(h.name)}</div>
+      <div class="ad">📍 ${esc(addr||"—")}</div>
+      <div class="ft"><span class="hrs">🕒 ${esc(hrs||"—")}</span><span class="go">Ochish →</span></div>
+    </div>
+  </div>`;
+}
+function renderHome(){
+  const q = document.getElementById("searchInput").value.trim().toLowerCase();
+  let list = HALLS;
+  if(curCat!=="all") list = list.filter(h=>h.type===curCat);
+  if(q) list = list.filter(h=>(h.name+" "+getDet(h,"address")+" "+getDet(h,"desc")).toLowerCase().includes(q));
+  document.getElementById("listTitle").innerHTML = "📍 <span>"+t("markazlar")+" ("+list.length+")</span>";
+  document.getElementById("hallList").innerHTML = list.length? list.map(hallCard).join("") : '<div class="empty">Hech narsa topilmadi</div>';
+}
+function renderMap(){
+  document.getElementById("mapList").innerHTML = HALLS.length? HALLS.map(h=>{
+    const ty=TYPE_META[h.type]||TYPE_META.boshqa;
+    return `<div class="hall" onclick="openDetail(${h.id})">
+      <div class="bd" style="display:flex;gap:12px;align-items:center;">
+        <div style="font-size:30px;">${ty.e}</div>
+        <div style="flex:1;">
+          <div class="nm">${esc(h.name)}</div>
+          <div class="ad">📍 ${esc(getDet(h,"address")||"—")}</div>
+        </div>
+        <button onclick="event.stopPropagation();openNavLink(${getDet(h,"lat",0)},${getDet(h,"lng",0)})" style="border:0;background:#FFF7ED;color:#F97316;font-weight:700;border-radius:10px;padding:8px 12px;cursor:pointer;">🧭</button>
+      </div></div>`;
+  }).join("") : '<div class="empty">'+t("nearYou")+'</div>';
+}
+
+/* ============ detail ============ */
+let curDetail=null;
+async function openDetail(id){
+  try{
+    const r = await fetch("/api/public/hall/"+id);
+    const d = await r.json();
+    curDetail = d;
+    const h = d.hall; const ty = TYPE_META[h.type]||TYPE_META.boshqa;
+    document.getElementById("dhHead").className = "dh "+h.type;
+    document.getElementById("dhHead").innerHTML = ty.e;
+    let pkgs = (d.packages||[]).map(p=>`<div class="pkg">
+        <div><div class="t">${esc(p.title)}</div><div class="d">${esc(p.desc||"")} · ${p.months||1} oy</div></div>
+        <div class="pr"><div class="now">${esc(p.price||"—")}</div>${p.old_price?`<div class="old">${esc(p.old_price)}</div>`:''}</div>
+      </div>`).join("");
+    document.getElementById("dBody").innerHTML = `
+      <div class="dname">${esc(h.name)}</div>
+      <div class="dmeta">📍 ${esc(getDet(h,"address")||"—")}<br>🕒 ${esc(getDet(h,"hours")||"—")}
+        ${getDet(h,"hours24",false)?' · <b style="color:#16a34a">24/7</b>':''}</div>
+      <div>${(h.rev_avg?'<span class="chip">★ '+h.rev_avg+' ('+h.rev_cnt+')</span>':'')}<span class="chip">${ty.label}</span></div>
+      ${getDet(h,"desc")?`<div class="dsec">ℹ️ ${t("about")}</div><div class="dmeta">${esc(getDet(h,"desc"))}</div>`:''}
+      <div class="dsec">🎟️ ${t("packages")}</div>
+      ${pkgs||'<div class="dmeta">Paketlar tez orada qo\'shiladi.</div>'}
+    `;
+    document.getElementById("detail").classList.add("open");
+  }catch(e){ toast("Yuklashda xato"); }
+}
+function closeDetail(){ document.getElementById("detail").classList.remove("open"); }
+function openNav(){
+  if(curDetail){
+    const lat=getDet(curDetail.hall,"lat"), lng=getDet(curDetail.hall,"lng");
+    if(lat&&lng) openNavLink(lat,lng); else toast("Manzil aniqlanmagan");
+  }
+}
+function openNavLink(lat,lng){
+  if(lat&&lng){ window.open("https://yandex.ru/maps/?pt="+lng+","+lat+"&z=16","_blank"); }
+  else toast("Koordinata yo'q");
+}
+
+/* ============ profile ============ */
+function renderProfile(){
+  const box = document.getElementById("profileGuest");
+  box.innerHTML = `
+    <div class="pf-hero">
+      <div class="ava">👤</div>
+      <div class="nm">${t("guestName")}</div>
+      <div class="ph">+998 _ __ __ __</div>
+    </div>
+    <div class="login-box">
+      <div style="font-size:17px;font-weight:800;margin-bottom:6px;">${t("loginTitle")}</div>
+      <input id="phoneIn" type="tel" placeholder="${t("phone")}" value="+998" />
+      <button onclick="toast('SMS kod — 2-bosqichda ulanadi')">${t("sendKod")}</button>
+    </div>
+    <div class="pf-list">
+      <div class="it">🎟️ <span>Mening obunalarim</span><span class="r">›</span></div>
+      <div class="it">📅 <span>Bronlarim</span><span class="r">›</span></div>
+      <div class="it">💳 <span>To'lovlar tarixi</span><span class="r">›</span></div>
+      <div class="it">⚙️ <span>Sozlamalar</span><span class="r">›</span></div>
+    </div>`;
+}
+
+/* ============ nav ============ */
+document.querySelectorAll(".nav-item").forEach(el=>{
+  el.onclick=()=>{
+    document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("on"));
+    el.classList.add("on");
+    document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+    document.getElementById(el.dataset.scr).classList.add("active");
+  };
+});
+document.querySelectorAll(".lang button").forEach(b=>{
+  b.onclick=()=>{
+    L=b.dataset.l;
+    document.querySelectorAll(".lang button").forEach(x=>x.classList.toggle("on",x===b));
+    document.querySelectorAll("[data-i]").forEach(e=>{e.textContent=t(e.dataset.i);});
+    document.getElementById("searchInput").placeholder=t("search");
+    document.getElementById("navBtnText").textContent=t("navBtn");
+    renderCats(); renderHome(); renderProfile();
+  };
+});
+document.getElementById("searchInput").addEventListener("input",renderHome);
+
+/* ============ boot ============ */
+renderProfile();
+loadHalls();
+setTimeout(()=>document.getElementById("splash").classList.add("hide"),1400);
+</script>
+</body>
+</html>

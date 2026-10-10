@@ -1,0 +1,40 @@
+# Local-only / huge folders — Docker image'ga kirmaydi
+_backup/
+backups/
+_shots/
+_word_tmp/
+.vscode/
+__pycache__/
+__pycache__/**
+*.pyc
+*.pyo
+
+# Loglar
+*.log
+_srv_*.log
+
+# Backup DBlar (35 MB dan oshiq, bizga faqat asosiy elgaku.db kerak)
+elgaku_clean_*.db
+elgaku_preclean*.db
+elgaku_preseed_*.db
+
+# Vaqtinchalik yordamchi skriptlar va audit fayllar (server.py ishlatmaydi)
+_*.py
+_*.js
+_*.txt
+_*.json
+_*.png
+_*.jpg
+_*.jpeg
+_*.b64.txt
+_*.xlsx
+
+# Lokal dev artefaktlari
+server.err.log
+server2.err.log
+server_live.err.log
+start_server.bat
+Dockerfile
+.dockerignore
+docker-entrypoint.sh
+fly.toml

@@ -1,0 +1,29 @@
+# fly.io konfiguratsiya — ELGAKU APK backend
+# Docs: https://fly.io/docs/reference/configuration/
+
+app = "elgaku-apk"          # -- buni deploy paytida o'zgartirishimiz mumkin (dunyo bo'ylab unikal bo'lishi shart)
+primary_region = "iad"      # AQSh Sharqiy (Virjiniya) — Osiyoga ham nisbatan tez
+
+[build]
+  image = "elgaku-local-build"   # Dockerfile orqali quriladi
+
+[env]
+  PORT = "8000"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = 'off'        # 30 kun davomida APK doim ulana olishi uchun o'chirmaymiz
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ["app"]
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"
+
+# Doimiy disk — elgaku.db, uploads/, backups/ shu yerda saqlanadi.
+# Birinchi deploy'dan oldin: fly volumes create elgaku_data --size 1
+[[mounts]]
+  source = "elgaku_data"
+  destination = "/data"

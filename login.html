@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ELGAKU — Kirish</title>
+  <link rel="icon" href="images/logo.png" />
+  <style>
+    :root{
+      --orange:#F97316; --orange-dark:#EA580C;
+      --ink:#111827; --gray:#6B7280; --line:#E5E7EB;
+    }
+    *{box-sizing:border-box;margin:0;padding:0;font-family:"Segoe UI",-apple-system,BlinkMacSystemFont,Arial,sans-serif;}
+    body{
+      min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;
+      background:linear-gradient(160deg,#FFF7ED 0%,#FFFFFF 45%,#FFFBEB 100%);
+      color:var(--ink);
+    }
+    .auth-card{
+      width:100%;max-width:430px;background:#fff;border:1px solid var(--line);
+      border-radius:24px;padding:36px 32px;box-shadow:0 24px 60px -24px rgba(249,115,22,.35);
+    }
+    .brand{display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:24px;}
+    .brand img{width:64px;height:64px;border-radius:50%;object-fit:cover;box-shadow:0 4px 14px rgba(249,115,22,.3);}
+    .brand h1{font-size:24px;font-weight:800;letter-spacing:-.5px;}
+    .step{display:none;}
+    .step.active{display:block;}
+    .step h2{font-size:22px;font-weight:800;margin-bottom:6px;text-align:center;}
+    .step .sub{font-size:14px;color:var(--gray);text-align:center;margin-bottom:24px;line-height:1.5;}
+
+    /* --- Tanlov kartalari (rol) --- */
+    .role-choice{display:flex;flex-direction:column;gap:14px;margin-top:8px;}
+    .role-card{
+      display:flex;align-items:center;gap:14px;border:1.5px solid var(--line);border-radius:16px;
+      padding:18px;cursor:pointer;transition:.15s;background:#fff;text-align:left;
+    }
+    .role-card:hover{border-color:var(--orange);box-shadow:0 8px 24px -12px rgba(249,115,22,.4);transform:translateY(-2px);}
+    .role-ico{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex:none;}
+    .role-ico.owner{background:#FFEDD5;}
+    .role-ico.user{background:#DBEAFE;}
+    .role-card strong{display:block;font-size:16px;}
+    .role-card small{color:var(--gray);font-size:13px;}
+
+    .field label{display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:6px;}
+    .field input{
+      width:100%;border:1.5px solid var(--line);border-radius:12px;padding:14px 12px;font-size:16px;outline:0;transition:.15s;
+    }
+    .field input:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(249,115,22,.15);}
+    .field{margin-bottom:14px;}
+    .phone-wrap{display:flex;align-items:center;border:1.5px solid var(--line);border-radius:12px;padding:0 12px;transition:.15s;}
+    .phone-wrap:focus-within{border-color:var(--orange);box-shadow:0 0 0 3px rgba(249,115,22,.15);}
+    .prefix{font-size:16px;font-weight:700;padding:14px 10px 14px 0;border-right:1px solid var(--line);}
+    .phone-wrap input{border:0;outline:0;padding:14px 12px;font-size:16px;width:100%;letter-spacing:1px;}
+
+    .btn{
+      width:100%;margin-top:18px;border:0;border-radius:12px;padding:14px;font-size:16px;font-weight:700;
+      cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:center;gap:8px;
+    }
+    .btn-orange{background:var(--orange);color:#fff;}
+    .btn-orange:hover{background:var(--orange-dark);}
+    .btn-ghost{background:#fff;border:1.5px solid var(--line);color:var(--ink);margin-top:10px;}
+    .btn-ghost:hover{border-color:#9CA3AF;}
+
+    .otp{display:flex;gap:8px;justify-content:center;margin:18px 0 8px;}
+    .otp input{width:46px;height:54px;text-align:center;font-size:22px;font-weight:700;border:1.5px solid var(--line);border-radius:12px;outline:0;transition:.15s;}
+    .otp input:focus{border-color:var(--orange);box-shadow:0 0 0 3px rgba(249,115,22,.15);}
+    .otp input.filled{border-color:var(--orange);background:#FFF7ED;}
+    .resend{text-align:center;font-size:13px;color:var(--gray);margin-top:14px;}
+    .resend a{color:var(--orange);font-weight:700;text-decoration:none;cursor:pointer;}
+    .resend a.disabled{color:var(--gray);cursor:default;}
+
+    .terms{display:flex;gap:8px;align-items:flex-start;margin-top:14px;font-size:12.5px;color:var(--gray);line-height:1.4;}
+    .terms input{margin-top:2px;accent-color:var(--orange);}
+    .langs{display:flex;gap:6px;justify-content:center;margin-top:24px;}
+    .langs button{background:#fff;border:1.5px solid var(--line);border-radius:8px;padding:6px 12px;font-size:12.5px;font-weight:600;color:var(--gray);cursor:pointer;}
+    .back-frame{display:flex;align-items:center;gap:6px;margin-bottom:12px;padding:8px 14px;border:1.5px solid var(--line);border-radius:10px;background:#fff;font-size:13px;color:var(--gray);cursor:pointer;width:max-content}
+    .back-frame:hover{border-color:var(--orange);color:var(--orange)}
+    .langs button.active{background:var(--orange);border-color:var(--orange);color:#fff;}
+    .back{display:block;text-align:center;font-size:13px;color:var(--gray);margin-top:18px;cursor:pointer;background:none;border:0;}
+    .back:hover{color:var(--orange);}
+    .err{color:#DC2626;font-size:13px;text-align:center;margin-top:10px;min-height:18px;}
+    @media(max-width:420px){ .auth-card{padding:28px 20px;} .otp input{width:42px;height:50px;} }
+    .file-warn{display:none;width:100%;max-width:430px;margin:0 auto 14px;background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;border-radius:12px;padding:12px 16px;font-size:13px;line-height:1.5;text-align:left;}
+    .file-warn code{background:#FEE2E2;padding:1px 6px;border-radius:5px;font-weight:600;}
+  </style>
+
+<style>
+.theme-switch{display:flex;gap:6px;align-items:center;margin-right:4px}
+.theme-btn{width:26px;height:26px;border-radius:8px;border:2px solid rgba(0,0,0,.18);cursor:pointer;padding:0;transition:.15s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.theme-btn:hover{transform:scale(1.12)}
+.theme-btn.active{border-color:#fff;box-shadow:0 0 0 2px var(--orange,#F97316)}
+.theme-fixed{position:fixed;bottom:18px;right:18px;z-index:99;background:#fff;padding:6px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.15)}
+</style>
+
+<script>
+/* ELGAKU — 3 xil ko'rinish: asl (hozirgi) / british / chinese */
+(function(){
+  var T={
+    asl:{"--accent":"#1D4ED8","--accent-dark":"#1E40AF","--accent-soft":"#EFF4FF","--accent-rgb":"29,78,216"},
+    british:{"--orange":"#E04020","--orange-dark":"#C03020","--ink":"#283870","--gray":"#708090","--line":"#D8E0EF","--dark":"#182850","--bg":"#F2F5FB","--accent":"#1898E0","--accent-dark":"#407098","--accent-soft":"#E2EDFA","--accent-rgb":"24,152,224","--orange-bg":"#FDEBE7","--dark2":"#24386B","--border":"#D8E0EF","--muted":"#708090"},
+    chinese:{"--orange":"#F84858","--orange-dark":"#D93848","--ink":"#303040","--gray":"#707888","--line":"#E0E0E8","--dark":"#303040","--bg":"#F7F7F6","--accent":"#2890F8","--accent-dark":"#3848F0","--accent-soft":"#E7F0FD","--accent-rgb":"40,144,248","--orange-bg":"#FDECEC","--dark2":"#45455E","--border":"#E0E0E8","--muted":"#707888"}
+  };
+  function apply(t){
+    document.documentElement.setAttribute("data-theme",t);
+    var s=document.getElementById("elgaku-theme-style");
+    if(!s){s=document.createElement("style");s.id="elgaku-theme-style";document.head.appendChild(s);}
+    var css="";
+    if(T[t]){css='html[data-theme="'+t+'"]{';for(var k in T[t])css+=k+":"+T[t][k]+";";css+="}";}
+    s.textContent=css;
+    var b=document.querySelectorAll("[data-theme-btn]");
+    for(var i=0;i<b.length;i++)b[i].classList.toggle("active",b[i].getAttribute("data-theme-btn")===t);
+  }
+  var cur="asl";
+  try{cur=localStorage.getItem("elgaku_theme")||"asl";}catch(e){}
+  if(!T[cur])cur="asl";
+  apply(cur);
+  if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",function(){apply(cur);});}
+  window.elgakuSetTheme=function(t){if(!T[t])t="asl";try{localStorage.setItem("elgaku_theme",t);}catch(e){}cur=t;apply(t);};
+})();
+</script>
+</head>
+<body>
+  <div class="theme-switch theme-fixed" title="Ko'rinish (tema)">
+  <button class="theme-btn" data-theme-btn="asl" onclick="elgakuSetTheme('asl')" title="Asl (hozirgi) ko'rinish" style="background:#F97316"></button>
+  <button class="theme-btn" data-theme-btn="british" onclick="elgakuSetTheme('british')" title="British palette" style="background:linear-gradient(135deg,#182850 40%,#E04020 70%)"></button>
+  <button class="theme-btn" data-theme-btn="chinese" onclick="elgakuSetTheme('chinese')" title="Chinese palette" style="background:linear-gradient(135deg,#F84858 45%,#F8A028 80%)"></button>
+</div>
+  <div class="file-warn" id="file-warn">⚠️ <b>Iltimos, tizimni server orqali oching!</b><br />Bu sahifa <code>file://</code> orqali ochilgan — xodim login/paroli ishlamaydi.<br />To'g'ri ishlash uchun: <b>http://localhost:8000</b> (yoki <code>start_server.bat</code> ni ishga tushiring).</div>
+  <div class="auth-card">
+    <div class="brand">
+      <img src="images/logo.png" alt="ELGAKU" />
+      <h1>ELGAKU</h1>
+    </div>
+
+    <!-- 0-bosqich: kim sifatida kirasiz? -->
+    <div class="step active" id="step-role">
+      <h2>Kirish</h2>
+      <p class="sub">O'zingizni qaysi guruhga kiritasiz?</p>
+      <div class="role-choice">
+        <button class="role-card" onclick="goOwner()">
+          <span class="role-ico owner">🏢</span>
+          <span><strong>Zal egasimisiz?</strong><small>Panelga login va parol bilan kiring</small></span>
+        </button>
+        <button class="role-card" onclick="goUser()">
+          <span class="role-ico user">🙋</span>
+          <span><strong>Boshqa</strong><small>Mijoz — telefon raqamingiz orqali kiring</small></span>
+        </button>
+      </div>
+      <div class="langs">
+        <button class="lang-btn active" id="uz-toggle-btn" onclick="toggleUzbekScript()" title="O'zbekcha: lotin / kril">O'zb</button>
+        <button class="lang-btn" data-l="ru" onclick="setLang('ru')" title="Русский">Рус</button>
+      </div>
+    </div>
+
+    <!-- 1a-bosqich: zal egasi login/parol -->
+    <div class="step" id="step-owner">
+      <button class="back-frame" onclick="show('step-role')">← Orqaga</button>
+      <h2>Zal egasi kirishi</h2>
+      <p class="sub">Sizga Operator tomonidan berilgan login va parolni kiriting.</p>
+      <div class="field">
+        <label>Login (foydalanuvchi nomi)</label>
+        <input type="text" id="owner-login" placeholder="misol: fitnesspro" />
+      </div>
+      <div class="field">
+        <label>Parol</label>
+        <input type="password" id="owner-pass" placeholder="••••••••" />
+      </div>
+      <div class="field">
+        <label>🔒 Robot emasligingizni tasdiqlang</label>
+        <div style="display:flex;gap:8px;align-items:center">
+          <img id="captcha-img" alt="captcha" style="height:56px;border:1.5px solid var(--line);border-radius:10px;background:#fff" />
+          <button type="button" onclick="loadCaptcha()" title="Yangi kod" style="border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:7px 11px;font-size:15px;cursor:pointer">🔄</button>
+        </div>
+        <input id="captcha-code" placeholder="Rasmdagi kodni kiriting" style="margin-top:8px" autocomplete="off" />
+      </div>
+      <div class="err" id="err-owner"></div>
+      <button class="btn btn-orange" onclick="ownerLogin()">Kirish →</button>
+      <button class="btn" style="width:100%;margin-top:10px;background:#fff;border:1.5px solid #2563EB;color:#2563EB" onclick="sendCreditsBySms()">📩 SMS orqali login/parolni yuborish</button>
+    </div>
+
+    <!-- 1b-bosqich: mijoz telefon -->
+    <div class="step" id="step-phone">
+      <button class="back-frame" onclick="show('step-role')">← Orqaga</button>
+      <h2>Mijoz kirishi</h2>
+      <p class="sub">Telefon raqamingizni kiriting, SMS kod yuboramiz.</p>
+      <div class="field">
+        <label>Telefon raqami</label>
+        <div class="phone-wrap">
+          <span class="prefix">+998</span>
+          <input type="tel" id="phone" maxlength="9" placeholder="00 000 00 00" inputmode="numeric" oninput="formatPhone(this)" />
+        </div>
+      </div>
+      <div class="terms">
+        <input type="checkbox" id="agree" checked />
+        <label for="agree">Davom etish orqali <u>Foydalanish shartlari</u> va <u>Maxfiylik siyosati</u>ga rozilik bildirasiz.</label>
+      </div>
+      <div class="err" id="err-phone"></div>
+      <button class="btn btn-orange" onclick="sendCode()">SMS kod olish →</button>
+    </div>
+
+    <!-- 2-bosqich: SMS kod -->
+    <div class="step" id="step-code">
+      <button class="back-frame" onclick="show('step-phone')">← Orqaga</button>
+      <h2>Tasdiqlash kodi</h2>
+      <p class="sub"><span id="shown-phone">+998</span> raqamiga yuborilgan <br/>6 xonali kodni kiriting.</p>
+      <div class="otp" id="otp">
+        <input maxlength="1" inputmode="numeric" /><input maxlength="1" inputmode="numeric" />
+        <input maxlength="1" inputmode="numeric" /><input maxlength="1" inputmode="numeric" />
+        <input maxlength="1" inputmode="numeric" /><input maxlength="1" inputmode="numeric" />
+      </div>
+      <div class="err" id="err-code"></div>
+      <button class="btn btn-orange" onclick="verifyCode()">Kirish</button>
+      <div class="resend">Kod kelmadimi? <a id="resend" onclick="resendCode()">Qayta yuborish</a> <span id="timer"></span></div>
+    </div>
+  </div>
+
+  <script>
+    /* ===== TILLAR: O'zbek (lotin, default) / Ўзбекча (крил) / Русский ===== */
+    var curLang = 'uz_lat';
+    try{ curLang = localStorage.getItem('elgaku_lang') || 'uz_lat'; }catch(e){}
+    var CYR = {'a':'а','b':'б','d':'д','e':'е','f':'ф','g':'г','h':'ҳ','i':'и','j':'ж','k':'к','l':'л','m':'м','n':'н','o':'о','p':'п','q':'қ','r':'р','s':'с','t':'т','u':'у','v':'в','x':'х','y':'й','z':'з','c':'с',
+    'A':'А','B':'Б','D':'Д','E':'Е','F':'Ф','G':'Г','H':'Ҳ','I':'И','J':'Ж','K':'К','L':'Л','M':'М','N':'Н','O':'О','P':'П','Q':'Қ','R':'Р','S':'С','T':'Т','U':'У','V':'В','X':'Х','Y':'Й','Z':'З','C':'С'};
+    function latToCyr(s){
+      s = String(s==null?'':s);
+      s = s.replace(/yo'/g,'йў').replace(/Yo'/g,'Йў').replace(/YO'/g,'ЙЎ');
+      s = s.replace(/oʻ/g,'ў').replace(/Oʻ/g,'Ў').replace(/o'/g,'ў').replace(/O'/g,'Ў');
+      s = s.replace(/gʻ/g,'ғ').replace(/Gʻ/g,'Ғ').replace(/g'/g,'ғ').replace(/G'/g,'Ғ');
+      s = s.replace(/sh/g,'ш').replace(/Sh/g,'Ш').replace(/SH/g,'Ш');
+      s = s.replace(/ch/g,'ч').replace(/Ch/g,'Ч').replace(/CH/g,'Ч');
+      s = s.replace(/ng/g,'нг').replace(/Ng/g,'Нг').replace(/NG/g,'НГ');
+      s = s.replace(/ya/g,'я').replace(/Ya/g,'Я').replace(/YA/g,'Я');
+      s = s.replace(/yo/g,'ё').replace(/Yo/g,'Ё').replace(/YO/g,'Ё');
+      s = s.replace(/yu/g,'ю').replace(/Yu/g,'Ю').replace(/YU/g,'Ю');
+      s = s.replace(/ʼ/g,'ъ').replace(/`/g,'ъ').replace(/'/g,'ъ');
+      var out='';
+      for(var i=0;i<s.length;i++){ var c=s[i]; out += CYR[c] || c; }
+      return out;
+    }
+    var RU_DICT = {
+"Kirish":"Вход","O'zingizni qaysi guruhga kiritasiz?":"В какую группу вы входите?",
+"Zal egasimisiz?":"Вы владелец зала?","Panelga login va parol bilan kiring":"Вход по логину и паролю",
+"Boshqa":"Другое","Mijoz — telefon raqamingiz orqali kiring":"Клиент — вход по номеру телефона",
+"Resepshn":"Ресепшн","Ko'ngil ochar markazlar — bron, to'lov, kassa":"Развлекательные центры — бронь, оплата, касса",
+"← Orqaga":"← Назад","Zal egasi kirishi":"Вход владельца зала",
+"Sizga Operator tomonidan berilgan login va parolni kiriting.":"Введите логин и пароль, выданные Оператором.",
+"Login (foydalanuvchi nomi)":"Логин (имя пользователя)","Parol":"Пароль",
+"🔒 Robot emasligingizni tasdiqlang":"🔒 Подтвердите, что вы не робот","Yangi kod":"Новый код",
+"Rasmdagi kodni kiriting":"Введите код с картинки","Kirish →":"Вход →",
+"📩 SMS orqali login/parolni yuborish":"📩 Отправить логин/пароль по SMS",
+"Mijoz kirishi":"Вход клиента","Telefon raqamingizni kiriting, SMS kod yuboramiz.":"Введите номер телефона — отправим SMS-код.",
+"Telefon raqami":"Номер телефона","Davom etish orqali":"Продолжая, вы соглашаетесь с",
+"Foydalanish shartlari":"Условиями использования","Maxfiylik siyosati":"и Политикой конфиденциальности",
+"ga rozilik bildirasiz.":".","SMS kod olish →":"Получить SMS-код →",
+"Tasdiqlash kodi":"Код подтверждения","raqamiga yuborilgan":"отправлен на номер",
+"6 xonali kodni kiriting.":"Введите 6-значный код.","Kod kelmadimi?":"Не пришёл код?",
+"Qayta yuborish":"Отправить снова","Iltimos, tizimni server orqali oching!":"Пожалуйста, откройте систему через сервер!",
+"Bu sahifa":"Эта страница","orqali ochilgan — xodim login/paroli ishlamaydi.":"открыта через file:// — логин/пароль не работают.",
+"To'g'ri ishlash uchun:":"Для правильной работы:","ni ishga tushiring.":"запустите.",
+"Rasmdagi kodni kiriting.":"Введите код с картинки.","Captcha noto'g'ri. Yangi kod so'rang.":"Капча неверна. Запросите новый код.",
+"Robot tekshiruvi muvaffaqiyatsiz. Qaytadan urining.":"Проверка робота не удалась. Попробуйте снова.",
+"Login va parolni kiriting.":"Введите логин и пароль.","🚫 Qurilma bloklangan, kutib turing.":"🚫 Устройство заблокировано, подождите.",
+"Login yoki parol noto'g'ri.":"Неверный логин или пароль.","Bu hisob faol emas. Operator bilan bog'laning.":"Аккаунт не активен. Обратитесь к Оператору.",
+"Bu hisobda operator paneliga kirish huquqi yo'q.":"У этого аккаунта нет доступа к панели оператора.",
+"Iltimos, to'g'ri 9 raqam kiriting.":"Введите корректные 9 цифр.","Davom etish uchun rozilik bering.":"Дайте согласие для продолжения.",
+"6 xonali kodni to'liq kiriting.":"Введите полный 6-значный код.",
+"Kod to'g'ri! (demo) — mijoz profili keyingi bosqichda.":"Код верен! (демо) — профиль клиента на следующем этапе.",
+"Kod qayta yuborildi (demo)":"Код отправлен повторно (демо)","🚫 Qurilma bloklandi: ":"🚫 Устройство заблокировано: ",
+" qoldi":" осталось","soat":" ч","daqiqa":" мин","Avval telefon/raqamni kiriting":"Сначала введите телефон/номер",
+"Zal egasi":"Владелец зала","misol: fitnesspro":"пример: fitnesspro","Ko'rinish (tema)":"Тема оформления",
+"Asl (hozirgi) ko'rinish":"Оригинальный вид","Xatolik":"Ошибка","Yuborildi":"Отправлено"
+    };
+    function t(s){ if(curLang==='uz') return latToCyr(s); if(curLang==='ru') return RU_DICT[s]!=null?RU_DICT[s]:s; return s; }
+    function cyrTextNode(n){
+      var full = n.nodeValue || ''; var trimmed = full.trim(); if(!trimmed) return;
+      if(n._lat === undefined) n._lat = full;
+      var src = n._lat.trim();
+      var out = (curLang==='uz') ? latToCyr(src) : (RU_DICT[src]!=null ? RU_DICT[src] : src);
+      var lead = full.match(/^\s*/)[0], trail = full.match(/\s*$/)[0];
+      var res = lead + out + trail;
+      if(res !== full) n.nodeValue = res;
+    }
+    function convText(n){
+      if(!n || n.nodeType!==3 || !n.nodeValue || !n.nodeValue.trim()) return;
+      var p = n.parentElement;
+      if(p && /^(SCRIPT|STYLE|TEXTAREA|INPUT|SELECT|OPTION)$/i.test(p.tagName)) return;
+      cyrTextNode(n);
+    }
+    function applyLangText(){
+      var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false), n, arr=[];
+      while(n=w.nextNode()) arr.push(n);
+      for(var i=0;i<arr.length;i++) convText(arr[i]);
+      if(curLang!=='uz_lat'){
+        var ph = document.querySelectorAll('[placeholder],[title]');
+        for(var j=0;j<ph.length;j++){
+          var el = ph[j];
+          if(el.tagName==='SCRIPT'||el.tagName==='STYLE') continue;
+          if(el.dataset.plat===undefined) el.dataset.plat = el.getAttribute('placeholder') || el.getAttribute('title') || '';
+          var src = el.dataset.plat;
+          var out = (curLang==='uz') ? latToCyr(src) : (RU_DICT[src]!=null?RU_DICT[src]:src);
+          if(el.hasAttribute('placeholder')) el.setAttribute('placeholder', out);
+          else el.setAttribute('title', out);
+        }
+      }
+    }
+    function restoreLangText(){
+      var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false), n, arr=[];
+      while(n=w.nextNode()) arr.push(n);
+      for(var i=0;i<arr.length;i++){ if(arr[i]._lat!==undefined){ arr[i].nodeValue=arr[i]._lat; delete arr[i]._lat; } }
+      var ph = document.querySelectorAll('[data-plat]');
+      for(var j=0;j<ph.length;j++){ var el=ph[j]; if(el.hasAttribute('placeholder')) el.setAttribute('placeholder', el.dataset.plat); else if(el.hasAttribute('title')) el.setAttribute('title', el.dataset.plat); delete el.dataset.plat; }
+    }
+    function applyLang(){
+      if(curLang==='uz_lat') restoreLangText(); else applyLangText();
+      var uzT = document.getElementById('uz-toggle-btn');
+      if(uzT){ uzT.textContent = (curLang==='uz') ? 'Ўзб' : "O'zb"; uzT.classList.toggle('active', curLang==='uz'||curLang==='uz_lat'); }
+      var ruB = document.querySelector('[data-l="ru"]');
+      if(ruB) ruB.classList.toggle('active', curLang==='ru');
+      var enB = document.querySelector('[data-l="en"]');
+      if(enB) enB.classList.toggle('active', curLang==='en');
+    }
+    function setLang(l){ curLang = l; try{ localStorage.setItem('elgaku_lang', l); }catch(e){} applyLang(); }
+    function toggleUzbekScript(){ setLang(curLang==='uz' ? 'uz_lat' : 'uz'); }
+    if(window.MutationObserver){
+      new MutationObserver(function(muts){
+        if(curLang==='uz_lat') return;
+        for(var i=0;i<muts.length;i++){
+          var m = muts[i];
+          if(m.type==='characterData'){ convText(m.target); continue; }
+          if(m.addedNodes){ for(var k=0;k<m.addedNodes.length;k++){ var nn=m.addedNodes[k]; if(nn.nodeType===3) convText(nn); else if(nn.nodeType===1){ var w2=document.createTreeWalker(nn,NodeFilter.SHOW_TEXT,null,false),t2; while(t2=w2.nextNode()) convText(t2); } } }
+        }
+      }).observe(document.body, {childList:true, subtree:true, characterData:true});
+    }
+    if(!document.getElementById('lang-css')){
+      var ls=document.createElement('style'); ls.id='lang-css';
+      ls.textContent='.langs .lang-btn.active{background:#2563EB;color:#fff;border-color:#2563EB}';
+      document.head.appendChild(ls);
+    }
+    var seconds = 59;
+
+    // --- Operator (super-admin) demo akkaunti ---
+    // Parol server tomonda tekshiriladi (/api/auth/super/check) — hech qachon brauzerga tushmaydi
+    var OPERATOR = { login: "operator", name: "Super Admin", photo: "" };
+    // Serverdan super-admin profil sozlamalarini yuklash (o'zgartirilgan bo'lsa)
+    try{
+      fetch('/api/auth/super', {cache:'no-store'}).then(function(r){return r.json();}).then(function(s){
+        if(s && s.login){ OPERATOR.login = s.login; OPERATOR.name = s.name || OPERATOR.name; OPERATOR.photo = s.photo || ''; }
+      }).catch(function(){});
+    }catch(e){}
+
+    function show(id){
+      document.querySelectorAll('.step').forEach(function(s){ s.classList.remove('active'); });
+      document.getElementById(id).classList.add('active');
+    }
+    function goOwner(){ show('step-owner'); loadCaptcha(); }
+    function goUser(){ show('step-phone'); }
+    function formatPhone(el){
+      var v = el.value.replace(/\D/g,'').slice(0,9);
+      var f = '';
+      if(v.length>0) f = v.slice(0,2);
+      if(v.length>2) f += ' ' + v.slice(2,5);
+      if(v.length>5) f += ' ' + v.slice(5,7);
+      if(v.length>7) f += ' ' + v.slice(7,9);
+      el.value = f;
+    }
+    function sendCreditsBySms(){
+      var login = (document.getElementById('owner-login').value||'').trim();
+      if(!login){ document.getElementById('err-owner').textContent = 'Avval telefon/raqamni kiriting'; return; }
+      alert('📩 SMS yuborildi (demo)\nRaqam: +998 ' + login + '\n\nSizning login va parolingiz shu raqamga SMS orqali keladi.\n(Prototipta real SMS yuborilmaydi — true SMS gateway ulanganda ishlaydi.)');
+    }
+    // Barcha huquqlar kalitlari (operator paneli bo'limlari)
+    var ALL_PERMS = ['dashboard','register','halls','rbac','partners','complaints','payments','cash','safety','invoices','corporate','support','monitoring','stats'];
+    function loadEmployees(){
+      try{ return JSON.parse(localStorage.getItem('elgaku_emp')||'[]') || []; }
+      catch(e){ return []; }
+    }
+    function startSession(emp, isSuper){
+      var session = {
+        id: isSuper ? 'super' : emp.id,
+        name: isSuper ? (OPERATOR.name || 'Super Admin') : emp.name,
+        login: isSuper ? OPERATOR.login : emp.login,
+        role: isSuper ? 'CEO' : (emp.role || 'Boshqa'),
+        perms: isSuper ? ALL_PERMS.slice() : (emp.perms || []),
+        super: !!isSuper,
+        photo: isSuper ? (OPERATOR.photo || '') : (emp.photo || ''),
+        since: new Date().toISOString()
+      };
+      sessionStorage.setItem('elgaku_session', JSON.stringify(session));
+    }
+    // --- Qurilma blok tizimi: 5 xato urinish -> 2 soat blok ---
+    function deviceId(){
+      var d = '';
+      try{ d = localStorage.getItem('elgaku_device') || ''; }catch(e){}
+      if(!d){
+        d = 'dev-' + Math.random().toString(36).slice(2) + '-' + Date.now().toString(36);
+        try{ localStorage.setItem('elgaku_device', d); }catch(e){}
+      }
+      return d;
+    }
+    var _blkTimer = null;
+    function fmtLeft(sec){
+      sec = Math.max(0, Math.floor(sec));
+      var h = Math.floor(sec/3600), m = Math.floor((sec%3600)/60);
+      return (h>0 ? h+' soat ' : '') + m + ' daqiqa';
+    }
+    function setBlockedUI(left){
+      var disable = left > 0;
+      var lg = document.getElementById('owner-login'), pw = document.getElementById('owner-pass');
+      if(lg) lg.disabled = disable;
+      if(pw) pw.disabled = disable;
+      var btn = document.querySelector('#step-owner .btn-orange');
+      if(btn) btn.disabled = disable;
+      var e = document.getElementById('err-owner');
+      if(_blkTimer){ clearInterval(_blkTimer); _blkTimer = null; }
+      if(disable && e){
+        var upd = function(){ e.textContent = '🚫 Qurilma bloklandi: ' + fmtLeft(left) + ' qoldi'; };
+        upd();
+        _blkTimer = setInterval(function(){ left -= 1; if(left <= 0){ setBlockedUI(0); } else { upd(); } }, 1000);
+      }
+    }
+    function checkDeviceBlock(cb){
+      try{
+        fetch('/api/auth/blocked?device=' + encodeURIComponent(deviceId()), {cache:'no-store'})
+          .then(function(r){ return r.json(); })
+          .then(function(d){
+            if(d && d.blocked){ setBlockedUI(d.left || 7200); if(cb) cb(true); }
+            else { setBlockedUI(0); if(cb) cb(false); }
+          })
+          .catch(function(){ setBlockedUI(0); if(cb) cb(false); });
+      }catch(e){ setBlockedUI(0); if(cb) cb(false); }
+    }
+    function recordAttempt(ok, cb){
+      try{
+        fetch('/api/auth/attempt', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({device:deviceId(), ok:!!ok})})
+          .then(function(r){ return r.json(); })
+          .then(function(d){
+            if(d && d.blocked){ setBlockedUI(d.left || 7200); }
+            if(cb) cb(d);
+          })
+          .catch(function(){ if(cb) cb(null); });
+      }catch(e){ if(cb) cb(null); }
+    }
+    checkDeviceBlock();
+    var _captcha = {token:null};
+    function loadCaptcha(){
+      try{
+        fetch('/api/auth/captcha', {cache:'no-store'})
+          .then(function(r){ return r.json(); })
+          .then(function(d){
+            if(d && d.token){
+              _captcha.token = d.token;
+              var im = document.getElementById('captcha-img');
+              if(im && d.img) im.src = d.img;
+            }
+          })
+          .catch(function(){});
+      }catch(e){}
+    }
+    function checkCaptcha(cb){
+      var cc = document.getElementById('captcha-code').value.trim();
+      if(!_captcha.token || !cc){
+        document.getElementById('err-owner').textContent = "Rasmdagi kodni kiriting.";
+        return;
+      }
+      fetch('/api/auth/captcha/check', {method:'POST', headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({token:_captcha.token, code:cc})})
+        .then(function(r){ return r.json(); })
+        .then(function(d){
+          if(d && d.ok){ cb(true); }
+          else {
+            document.getElementById('err-owner').textContent = "Captcha noto'g'ri. Yangi kod so'rang.";
+            loadCaptcha();
+            document.getElementById('captcha-code').value = '';
+          }
+        })
+        .catch(function(){
+          document.getElementById('err-owner').textContent = "Robot tekshiruvi muvaffaqiyatsiz. Qaytadan urining.";
+          loadCaptcha();
+        });
+    }
+    function ownerLogin(){
+      var l = document.getElementById('owner-login').value.trim();
+      var p = document.getElementById('owner-pass').value;
+      if(!l || !p){ document.getElementById('err-owner').textContent = "Login va parolni kiriting."; return; }
+      checkDeviceBlock(function(blocked){
+        if(blocked){ document.getElementById('err-owner').textContent = '🚫 Qurilma bloklangan, kutib turing.'; return; }
+        checkCaptcha(function(ok){
+          doOwnerLogin(l, p);
+        });
+      });
+    }
+    function doOwnerLogin(l, p){
+      var fail = function(){
+        document.getElementById('err-owner').textContent = "Login yoki parol noto'g'ri.";
+        recordAttempt(false);
+      };
+      // 1) Zal egasi (halls.login + halls.pass) — server orqali tekshiriladi
+      try{
+        fetch('/api/auth/owner/login', {method:'POST', headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({login:l, password:p})})
+          .then(function(r){ return r.json(); })
+          .then(function(d){
+            if(d && d.ok && d.hall){
+              recordAttempt(true);
+              var s = {login:l, name:(d.hall.owner||d.hall.name||'Zal egasi'), hall:d.hall, since:new Date().toISOString()};
+              sessionStorage.setItem('elgaku_owner_session', JSON.stringify(s));
+              window.location.href = 'owner.html';
+              return;
+            }
+            empFlow();
+          })
+          .catch(function(){ empFlow(); });
+      }catch(e){ empFlow(); }
+      // 2) Operator (super-admin) / xodimlar — server-tomon xavfsiz tekshiruv
+      function empFlow(){
+        // 2.1) Super-admin (CEO): parol serverda tekshiriladi — /api/auth/super/check
+        fetch('/api/auth/super/check', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({login:l, password:p})
+        }).then(function(r){ return r.json(); }).then(function(sr){
+          if(sr && sr.ok){
+            recordAttempt(true);
+            OPERATOR.login = sr.login || OPERATOR.login;
+            OPERATOR.name = sr.name || OPERATOR.name;
+            OPERATOR.photo = sr.photo || OPERATOR.photo;
+            startSession(null, true);
+            window.location.href = 'operator.html';
+            return;
+          }
+          // 2.2) Hodim (operator/buxgalter/CEO): /api/auth/employee/check
+          fetch('/api/auth/employee/check', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({login:l, password:p})
+          }).then(function(r){ return r.json(); }).then(function(er){
+            if(!er || !er.ok){ fail(); return; }
+            var emp = er.emp;
+            if(emp.status && emp.status !== 'faol'){
+              document.getElementById('err-owner').textContent = "Bu hisob faol emas. Operator bilan bog'laning.";
+              return;
+            }
+            var panelRole = ['CEO','Operator','Buxgalter'].indexOf(emp.role) >= 0;
+            if(!panelRole && (!emp.perms || !emp.perms.length)){
+              document.getElementById('err-owner').textContent = "Bu hisobda operator paneliga kirish huquqi yo'q.";
+              return;
+            }
+            recordAttempt(true);
+            startSession(emp, false);
+            sessionStorage.setItem('elgaku_welcome','1');
+            window.location.href = 'staff.html';
+          }).catch(function(){ fail(); });
+        }).catch(function(){ fail(); });
+      }
+    }
+    function sendCode(){
+      var p = document.getElementById('phone').value.replace(/\D/g,'');
+      var agree = document.getElementById('agree').checked;
+      if(p.length !== 9){ document.getElementById('err-phone').textContent = "Iltimos, to'g'ri 9 raqam kiriting."; return; }
+      if(!agree){ document.getElementById('err-phone').textContent = "Davom etish uchun rozilik bering."; return; }
+      document.getElementById('shown-phone').textContent = "+998 " + p.slice(0,2)+" "+p.slice(2,5)+" "+p.slice(5,7)+" "+p.slice(7);
+      show('step-code'); startTimer();
+      document.querySelector('#otp input').focus();
+    }
+    function verifyCode(){
+      var code = ''; document.querySelectorAll('#otp input').forEach(function(i){ code += i.value; });
+      if(code.length !== 6){ document.getElementById('err-code').textContent = "6 xonali kodni to'liq kiriting."; return; }
+      alert("Kod to'g'ri! (demo) — mijoz profili keyingi bosqichda.");
+    }
+    function resendCode(){
+      if(document.getElementById('resend').classList.contains('disabled')) return;
+      startTimer(); alert("Kod qayta yuborildi (demo)");
+    }
+    function startTimer(){
+      var el = document.getElementById('resend'), t = document.getElementById('timer');
+      seconds = 59; el.classList.add('disabled'); t.textContent = "(00:"+seconds+")";
+      var iv = setInterval(function(){
+        seconds--; t.textContent = "(00:"+(seconds<10?'0':'')+seconds+")";
+        if(seconds<=0){ clearInterval(iv); el.classList.remove('disabled'); t.textContent=""; }
+      },1000);
+    }
+    document.querySelectorAll('#otp input').forEach(function(inp,idx,arr){
+      inp.addEventListener('input',function(){
+        this.classList.toggle('filled', !!this.value);
+        if(this.value && idx<arr.length-1) arr[idx+1].focus();
+      });
+      inp.addEventListener('keydown',function(e){
+        if(e.key==='Backspace' && !this.value && idx>0){ arr[idx-1].focus(); arr[idx-1].value=''; }
+      });
+    });
+    if(location.protocol === 'file:'){
+      var _w = document.getElementById('file-warn');
+      if(_w) _w.style.display = 'block';
+    }
+    try{ applyLang(); }catch(e){}
+  </script>
+</body>
+</html>

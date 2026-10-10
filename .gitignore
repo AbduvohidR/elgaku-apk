@@ -1,0 +1,47 @@
+# ===== ELGAKUPRO — Render deploy .gitignore =====
+# Faqat ishlab chiqarishda kerak bo'ladigan fayllar repozitoriyaga tushadi.
+
+# Zaxira nusxalar / backup papkalar (katta, kerak emas)
+/backups/
+/_backup/
+/_shots/
+/Hujjatlar/_shots/
+/_word_tmp/
+/.vscode/
+
+# Yopiq papkalar (kerak bo'lsa alohida qo'shing)
+# /Hujjatlar/
+# /_pay_pages/
+
+# SQLite baza zaxiralari (faqat asl elgaku.db repoda — boshqa barcha *.db ni chiqarib tashlaymiz)
+elgaku.db.bak*
+elgaku_*.db
+*.db.bak*
+
+# Loglar va runtime chiqishlari
+*.log
+*.err.log
+server*.log
+server*.err.log
+_*.txt
+_srv_out*.log
+_srv_err*.log
+
+# Ishchi / patch / test skriptlari (hammasi _ bilan boshlanadi)
+_*.py
+_*.js
+_*.txt
+_*.png
+_*.jpg
+_*.xlsx
+
+# Python cache
+__pycache__/
+*.pyc
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Local server test (kerak emas)
+start_server.bat

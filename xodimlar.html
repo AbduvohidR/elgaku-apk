@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ELGAKU — Yangi xodimlar (RBAC)</title>
+<link rel="icon" href="images/logo.png" />
+<style>
+  :root{
+    --orange:#F97316; --orange-dark:#EA580C; --orange-bg:#FFF7ED;
+    --dark:#111827; --dark2:#1F2937; --border:#E5E7EB; --muted:#6B7280;
+    --ok:#16A34A; --red:#DC2626; --blue:#2563EB;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:'Segoe UI',system-ui,Arial,sans-serif; background:#F3F4F6; color:#111827;}
+  .wrap{max-width:1200px; margin:0 auto; padding:24px;}
+  header{display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; padding:16px 20px;
+    background:linear-gradient(135deg,#1F2937 0%,#111827 100%); color:#fff; border-radius:14px; margin-bottom:20px;}
+  header .brand{display:flex; align-items:center; gap:12px; font-weight:700; font-size:20px;}
+  header .brand .logo{width:38px; height:38px; border-radius:10px; background:linear-gradient(135deg,#F97316,#EA580C);
+    display:flex; align-items:center; justify-content:center; font-size:20px;}
+  header .who{font-size:13px; color:#FBBF24; text-align:right;}
+  header .who b{display:block; color:#fff; font-size:15px;}
+  .banner{display:flex; gap:12px; align-items:center; background:#EFF6FF; border:1px solid #BFDBFE; color:#1E40AF;
+    border-radius:12px; padding:12px 16px; margin-bottom:18px; font-size:14px;}
+  .banner b{color:#1D4ED8;}
+  .toolbar{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; flex-wrap:wrap;}
+  .toolbar h2{font-size:18px; display:flex; align-items:center; gap:8px;}
+  .toolbar .count{font-size:13px; color:var(--muted);}
+  .btn{display:inline-flex; align-items:center; gap:6px; border:none; cursor:pointer; border-radius:9px; font-size:14px;
+    padding:9px 16px; font-weight:600; transition:.15s;}
+  .btn-primary{background:var(--orange); color:#fff;}
+  .btn-primary:hover{background:var(--orange-dark);}
+  .btn-ghost{background:#fff; color:var(--dark); border:1px solid var(--border);}
+  .btn-ghost:hover{background:#F9FAFB;}
+  .btn-danger{background:#FEF2F2; color:var(--red); border:1px solid #FECACA;}
+  .card{background:#fff; border:1px solid var(--border); border-radius:14px; overflow:hidden;}
+  table{width:100%; border-collapse:collapse; font-size:14px;}
+  th,td{padding:12px 14px; text-align:left; border-bottom:1px solid #F3F4F6; vertical-align:middle;}
+  th{background:#F9FAFB; color:#374151; font-weight:600; white-space:nowrap;}
+  tr:hover td{background:#FFF9F5;}
+  .av{width:38px; height:38px; border-radius:50%; object-fit:cover; display:block;}
+  .av-ph{width:38px; height:38px; border-radius:50%; background:var(--orange-bg); color:var(--orange-dark);
+    display:flex; align-items:center; justify-content:center; font-size:18px;}
+  .cell-p{display:flex; align-items:center; gap:10px;}
+  .badge{display:inline-block; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:600;}
+  .b-op{background:#FEF3C7; color:#B45309;}
+  .b-bux{background:#DBEAFE; color:#1E40AF;}
+  .b-ceo{background:#F3E8FF; color:#7E22CE;}
+  .b-ok{background:#DCFCE7; color:#15803D;}
+  .b-off{background:#F3F4F6; color:#6B7280;}
+  .perm{font-size:12px; color:var(--muted);}
+  .row-actions{display:flex; gap:6px;}
+  .icon-btn{border:1px solid var(--border); background:#fff; border-radius:8px; cursor:pointer; padding:5px 8px; font-size:14px;}
+  .icon-btn:hover{border-color:var(--orange); color:var(--orange);}
+  .empty{text-align:center; color:var(--muted); padding:40px 20px;}
+  /* modal */
+  .modal{position:fixed; inset:0; background:rgba(17,24,39,.55); display:none; align-items:flex-start; justify-content:center; z-index:50; padding:30px 16px; overflow:auto;}
+  .modal.show{display:flex;}
+  .modal-box{background:#fff; border-radius:16px; max-width:680px; width:100%; padding:22px 24px;}
+  .modal-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;}
+  .modal-head h3{font-size:17px;}
+  .close-x{border:none; background:none; font-size:22px; cursor:pointer; color:var(--muted);}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  .field label{display:block; font-size:12px; color:#374151; margin-bottom:5px; font-weight:600;}
+  .field input,.field select{width:100%; padding:9px 11px; border:1px solid var(--border); border-radius:9px; font-size:14px;}
+  .field input:focus,.field select:focus{outline:none; border-color:var(--orange);}
+  .field.full{grid-column:1/-1;}
+  .perms-box{border:1px solid var(--border); border-radius:10px; padding:10px 12px; margin-top:4px;}
+  .perms-box .p-item{display:inline-flex; align-items:center; gap:6px; width:31%; margin:4px 0; font-size:13px;}
+  .perms-box input{width:auto;}
+  .modal-actions{display:flex; justify-content:flex-end; gap:10px; margin-top:18px;}
+  .toast{position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#111827; color:#fff;
+    padding:10px 18px; border-radius:10px; font-size:14px; opacity:0; transition:.25s; z-index:99;}
+  .toast.show{opacity:1;}
+  @media(max-width:720px){ .grid{grid-template-columns:1fr;} .perms-box .p-item{width:48%;} }
+</style>
+
+<style>
+.theme-switch{display:flex;gap:6px;align-items:center;margin-right:4px}
+.theme-btn{width:26px;height:26px;border-radius:8px;border:2px solid rgba(0,0,0,.18);cursor:pointer;padding:0;transition:.15s;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.theme-btn:hover{transform:scale(1.12)}
+.theme-btn.active{border-color:#fff;box-shadow:0 0 0 2px var(--orange,#F97316)}
+.theme-fixed{position:fixed;bottom:18px;right:18px;z-index:99;background:#fff;padding:6px;border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.15)}
+</style>
+
+<script>
+/* ELGAKU — 3 xil ko'rinish: asl (hozirgi) / british / chinese */
+(function(){
+  var T={
+    asl:{"--accent":"#1D4ED8","--accent-dark":"#1E40AF","--accent-soft":"#EFF4FF","--accent-rgb":"29,78,216"},
+    british:{"--orange":"#E04020","--orange-dark":"#C03020","--ink":"#283870","--gray":"#708090","--line":"#D8E0EF","--dark":"#182850","--bg":"#F2F5FB","--accent":"#1898E0","--accent-dark":"#407098","--accent-soft":"#E2EDFA","--accent-rgb":"24,152,224","--orange-bg":"#FDEBE7","--dark2":"#24386B","--border":"#D8E0EF","--muted":"#708090"},
+    chinese:{"--orange":"#F84858","--orange-dark":"#D93848","--ink":"#303040","--gray":"#707888","--line":"#E0E0E8","--dark":"#303040","--bg":"#F7F7F6","--accent":"#2890F8","--accent-dark":"#3848F0","--accent-soft":"#E7F0FD","--accent-rgb":"40,144,248","--orange-bg":"#FDECEC","--dark2":"#45455E","--border":"#E0E0E8","--muted":"#707888"}
+  };
+  function apply(t){
+    document.documentElement.setAttribute("data-theme",t);
+    var s=document.getElementById("elgaku-theme-style");
+    if(!s){s=document.createElement("style");s.id="elgaku-theme-style";document.head.appendChild(s);}
+    var css="";
+    if(T[t]){css='html[data-theme="'+t+'"]{';for(var k in T[t])css+=k+":"+T[t][k]+";";css+="}";}
+    s.textContent=css;
+    var b=document.querySelectorAll("[data-theme-btn]");
+    for(var i=0;i<b.length;i++)b[i].classList.toggle("active",b[i].getAttribute("data-theme-btn")===t);
+  }
+  var cur="asl";
+  try{cur=localStorage.getItem("elgaku_theme")||"asl";}catch(e){}
+  if(!T[cur])cur="asl";
+  apply(cur);
+  if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",function(){apply(cur);});}
+  window.elgakuSetTheme=function(t){if(!T[t])t="asl";try{localStorage.setItem("elgaku_theme",t);}catch(e){}cur=t;apply(t);};
+})();
+</script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand"><div class="logo">🐣</div><span>ELGAKU — Yangi xodimlar</span></div>
+    <div class="theme-switch" title="Ko'rinish (tema)">
+      <button class="theme-btn" data-theme-btn="asl" onclick="elgakuSetTheme('asl')" title="Asl (hozirgi) ko'rinish" style="background:#F97316"></button>
+      <button class="theme-btn" data-theme-btn="british" onclick="elgakuSetTheme('british')" title="British palette" style="background:linear-gradient(135deg,#182850 40%,#E04020 70%)"></button>
+      <button class="theme-btn" data-theme-btn="chinese" onclick="elgakuSetTheme('chinese')" title="Chinese palette" style="background:linear-gradient(135deg,#F84858 45%,#F8A028 80%)"></button>
+    </div>
+    <div class="who"><b id="who">—</b>Huquqlar boshqaruvi (RBAC)</div>
+  </header>
+
+  <div class="banner">
+    <span>💡</span>
+    <div><b>Yangi xodim qo'shilgach, uning login va paroli darhol ishlaydi.</b><br />
+    Xodim kiritilgan login/parol bilan kirish sahifasida (staff paneli) tizimga kiradi. Barcha yozuvlar serverda saqlanadi va barcha brauzerlarda bir xil.</div>
+  </div>
+
+  <div class="toolbar">
+    <h2>👥 Xodimlar ro'yxati <span class="count" id="count">0 ta</span></h2>
+    <button class="btn btn-primary" onclick="openModal()">➕ Yangi xodim</button>
+  </div>
+
+  <div class="card">
+    <table>
+      <thead><tr>
+        <th>Xodim</th><th>Rol</th><th>Login</th><th>Holat</th><th>Ruxsatlar</th><th style="width:110px">Amallar</th>
+      </tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div class="empty" id="empty" style="display:none">Hozircha xodimlar yo'q — "➕ Yangi xodim" tugmasini bosing.</div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal" id="emp-modal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="m-title">➕ Yangi xodim qo'shish</h3>
+      <button class="close-x" onclick="closeModal()">×</button>
+    </div>
+    <div class="grid">
+      <div class="field full"><label>Ism / Familiya *</label><input id="f-name" placeholder="Masalan: Aziz Karimov" /></div>
+      <div class="field"><label>Rol</label>
+        <select id="f-role"><option>CEO</option><option selected>Operator</option><option>Buxgalter</option><option>Biznes egasimisiz</option><option>Boshqa</option></select>
+      </div>
+      <div class="field"><label>Holat</label>
+        <select id="f-status"><option value="faol" selected>Faol</option><option value="blok">Bloklangan</option></select>
+      </div>
+      <div class="field"><label>Login *</label><input id="f-login" placeholder="user123" /></div>
+      <div class="field"><label>Parol *</label><input id="f-pass" placeholder="Parol kiriting" /></div>
+      <div class="field full"><label>Ruxsatlar (bo'limlar)</label>
+        <div class="perms-box" id="perms-box"></div>
+      </div>
+      <div class="field full"><label>Izoh</label><input id="f-note" placeholder="Masalan: Toshkent shahri" /></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal()">Bekor qilish</button>
+      <button class="btn btn-primary" onclick="saveEmp()">💾 Saqlash</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var ALL_PERMS = ['dashboard','register','halls','rbac','partners','complaints','payments','invoices','corporate','support','monitoring','stats'];
+var PERM_LABEL = {
+  dashboard:'Dashboard', register:"Ro'yxatga olish", halls:'Zallar', rbac:'Huquqlar (RBAC)',
+  partners:'Hamkorlar', complaints:'Shikoyatlar', payments:'To\'lovlar', invoices:'Cheklar',
+  corporate:'Korporativ', support:"Qo'llab-quvvatlash", monitoring:'Monitoring', stats:'Statistika'
+};
+var EMPLOYEES = [];
+var _editId = null;
+
+// --- Kirish himoyasi: faqat super-admin ---
+(function(){
+  try{
+    var s = JSON.parse(sessionStorage.getItem('elgaku_session')||'null');
+    if(!s || !s.super){ location.replace('login.html'); return; }
+    document.getElementById('who').textContent = s.name + ' (' + s.role + ')';
+  }catch(e){ location.replace('login.html'); }
+})();
+
+// --- Server + localStorage yuklash ---
+function loadEmp(){
+  fetch('/api/employees', {cache:'no-store'}).then(function(r){ return r.json(); }).then(function(list){
+    if(list && list.length){ EMPLOYEES = list; try{ localStorage.setItem('elgaku_emp', JSON.stringify(list)); }catch(e){} }
+    render();
+  }).catch(function(){
+    try{ EMPLOYEES = JSON.parse(localStorage.getItem('elgaku_emp')||'[]'); }catch(e){ EMPLOYEES = []; }
+    render();
+  });
+}
+function empSave(){
+  try{ localStorage.setItem('elgaku_emp', JSON.stringify(EMPLOYEES)); }catch(e){}
+  try{ fetch('/api/employees/sync', {method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify(EMPLOYEES)}); }catch(e){}
+}
+
+function roleBadge(role){
+  var map = {'Operator':'b-op','Buxgalter':'b-bux','CEO':'b-ceo'};
+  return '<span class="badge ' + (map[role]||'b-off') + '">' + (role||'Boshqa') + '</span>';
+}
+function render(){
+  var tb = document.getElementById('tbody'); tb.innerHTML = '';
+  document.getElementById('count').textContent = EMPLOYEES.length + ' ta';
+  document.getElementById('empty').style.display = EMPLOYEES.length ? 'none' : 'block';
+  EMPLOYEES.forEach(function(e){
+    var photo = (e.photo ? '<img class="av" src="'+e.photo+'" />' : '<div class="av-ph">👤</div>');
+    var perms = (e.perms && e.perms.length) ? e.perms.map(function(k){ return (PERM_LABEL[k]||k); }).join(', ') : '—';
+    var status = (e.status==='faol') ? '<span class="badge b-ok">Faol</span>' : '<span class="badge b-off">Blok</span>';
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td><div class="cell-p">'+photo+'<div><b>'+ (e.name||'—') +'</b><div class="perm">'+ (e.note||'') +'</div></div></div></td>' +
+      '<td>'+ roleBadge(e.role) +'</td>' +
+      '<td>'+ (e.login||'') +'</td>' +
+      '<td>'+ status +'</td>' +
+      '<td class="perm">'+ perms +'</td>' +
+      '<td><div class="row-actions">' +
+        '<button class="icon-btn" title="Tahrirlash" onclick="openModal(' + e.id + ')">✏️</button>' +
+        '<button class="icon-btn" title="O\'chirish" onclick="delEmp(' + e.id + ')">🗑</button>' +
+      '</div></td>';
+    tb.appendChild(tr);
+  });
+}
+
+function buildPermsBox(){
+  var box = document.getElementById('perms-box'); box.innerHTML = '';
+  ALL_PERMS.forEach(function(k){
+    var label = document.createElement('label'); label.className = 'p-item';
+    label.innerHTML = '<input type="checkbox" id="pp-'+k+'" /> ' + (PERM_LABEL[k]||k);
+    box.appendChild(label);
+  });
+}
+function autoPermsForRole(role){
+  if(role === 'CEO'){
+    ALL_PERMS.forEach(function(k){ var cb=document.getElementById('pp-'+k); if(cb) cb.checked = true; });
+  } else if(role === 'Buxgalter'){
+    ['payments','invoices','monitoring','stats'].forEach(function(k){ var cb=document.getElementById('pp-'+k); if(cb) cb.checked = true; });
+  } else if(role === 'Operator'){
+    ['register','halls','partners','payments','corporate'].forEach(function(k){ var cb=document.getElementById('pp-'+k); if(cb) cb.checked = true; });
+  } else {
+    ALL_PERMS.forEach(function(k){ var cb=document.getElementById('pp-'+k); if(cb) cb.checked = false; });
+  }
+}
+
+function openModal(id){
+  _editId = (typeof id === 'number') ? id : null;
+  buildPermsBox();
+  var e = _editId ? EMPLOYEES.find(function(x){ return x.id===_editId; }) : null;
+  document.getElementById('m-title').textContent = e ? '✏️ Xodimni tahrirlash' : '➕ Yangi xodim qo\'shish';
+  document.getElementById('f-name').value = e ? (e.name||'') : '';
+  document.getElementById('f-role').value = e ? (e.role||'Operator') : 'Operator';
+  document.getElementById('f-status').value = e ? (e.status||'faol') : 'faol';
+  document.getElementById('f-login').value = e ? (e.login||'') : ('user'+Math.floor(Math.random()*900+100));
+  document.getElementById('f-pass').value = e ? (e.pass||'') : '';
+  document.getElementById('f-note').value = e ? (e.note||'') : '';
+  document.getElementById('f-role').onchange = function(){ autoPermsForRole(this.value); };
+  if(e && e.perms){
+    ALL_PERMS.forEach(function(k){ var cb=document.getElementById('pp-'+k); if(cb) cb.checked = e.perms.indexOf(k)>=0; });
+  } else {
+    autoPermsForRole('Operator');
+  }
+  document.getElementById('emp-modal').classList.add('show');
+}
+function closeModal(){ document.getElementById('emp-modal').classList.remove('show'); }
+
+function saveEmp(){
+  var name = document.getElementById('f-name').value.trim();
+  var login = document.getElementById('f-login').value.trim();
+  var pass = document.getElementById('f-pass').value;
+  if(!name){ toast('Ism kiriting'); return; }
+  if(!login){ toast('Login kiriting'); return; }
+  if(!pass){ toast('Parol kiriting'); return; }
+  var perms = [];
+  ALL_PERMS.forEach(function(k){ if(document.getElementById('pp-'+k).checked) perms.push(k); });
+  var data = {
+    name:name, role:document.getElementById('f-role').value,
+    status:document.getElementById('f-status').value,
+    login:login, pass:pass, perms:perms,
+    note:document.getElementById('f-note').value.trim(),
+    brought:0, deals:0, conv:0, photo:'', created:new Date().toISOString().slice(0,16).replace('T',' ')
+  };
+  if(_editId){
+    var e = EMPLOYEES.find(function(x){ return x.id===_editId; });
+    if(e){ Object.assign(e, data); }
+  } else {
+    data.id = Date.now(); EMPLOYEES.push(data);
+  }
+  empSave(); render();
+  closeModal();
+  toast('✅ Saqlandi — xodim darhol kirishi mumkin');
+}
+
+function delEmp(id){
+  var e = EMPLOYEES.find(function(x){ return x.id===id; });
+  if(!e) return;
+  if(!confirm('«' + (e.name||'') + '» (' + (e.login||'') + ') ni o\'chirmoqchimisiz?')) return;
+  EMPLOYEES = EMPLOYEES.filter(function(x){ return x.id!==id; });
+  empSave();
+  if(e && e.login){ try{ fetch('/api/employees/delete/'+encodeURIComponent(e.login), {method:'DELETE'}); }catch(err){} }
+  render();
+  toast('🗑 O\'chirildi');
+}
+
+function toast(msg){
+  var t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._tm); t._tm = setTimeout(function(){ t.classList.remove('show'); }, 2600);
+}
+
+loadEmp();
+</script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+# server.py faqat Python stdlib (http.server, sqlite3, json, ...) ishlatadi.
+# Tashqi paketlar hozircha shart emas — bo'sh qoldiramiz.

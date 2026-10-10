@@ -1,0 +1,38 @@
+# Railway upload'ga kirmasin — katta / keraksiz fayllar
+backups/
+_backup/
+_shots/
+_word_tmp/
+.vscode/
+__pycache__/
+*.pyc
+*.pyo
+
+# Loglar
+*.log
+_srv_*.log
+
+# Backup DBlar (35 MB dan oshiq, bizga faqat asosiy elgaku.db kerak)
+elgaku_clean_*.db
+elgaku_preclean*.db
+elgaku_preseed_*.db
+
+# Vaqtinchalik yordamchi skriptlar (server.py ishlatmaydi)
+_*.py
+_*.js
+_*.txt
+_*.json
+_*.png
+_*.jpg
+_*.jpeg
+_*.b64.txt
+_*.xlsx
+
+# Boshqa hosting konfiguratsiyalari
+Dockerfile
+.dockerignore
+docker-entrypoint.sh
+fly.toml
+render.yaml
+railway.json
+Procfile

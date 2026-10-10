@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ELGAKU — Har kimning sport hayoti</title>
+  <link rel="icon" href="images/logo.png" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <style>
+    .live-halls{padding:70px 0;background:#fff;}
+    .lh-title{font-size:34px;font-weight:800;text-align:center;margin-bottom:8px;}
+    .lh-sub{text-align:center;color:#6B7280;margin-bottom:14px;}
+    .lh-strip-wrap{position:relative;}
+    .lh-section{margin-bottom:20px;}
+    .lh-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:10px;}
+    .lh-eyebrow{font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#F97316;display:block;margin-bottom:3px;}
+    .lh-subtitle{font-size:21px;font-weight:800;margin:0;display:flex;align-items:center;gap:8px;color:#111827;}
+    .lh-cnt{font-size:12px;font-weight:700;color:#6b7280;background:#f3f4f6;border-radius:999px;padding:2px 9px;}
+    .lh-subtitle-ic{width:32px;height:32px;border-radius:10px;background:#FFF7ED;display:inline-flex;align-items:center;justify-content:center;font-size:17px;}
+    .lh-more{background:#fff;border:1px solid #e5e7eb;border-radius:999px;padding:7px 15px;font-size:12.5px;font-weight:600;color:#374151;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;transition:.15s;}
+    .lh-more:hover{background:#f3f4f6;border-color:#d1d5db;}
+    .lh-more .lh-arr{transition:transform .15s;}
+    .lh-more:hover .lh-arr{transform:translateX(3px);}
+    .lh-strip{display:flex;gap:18px;overflow-x:auto;scroll-behavior:smooth;padding:4px 2px 16px;scroll-snap-type:x mandatory;-ms-overflow-style:none;scrollbar-width:none;}
+    .lh-strip::-webkit-scrollbar{display:none;}
+    .lh-strip .lh-card{width:280px;flex:0 0 auto;scroll-snap-align:start;}
+    .lh-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:42px;height:42px;border-radius:50%;border:0;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.18);font-size:24px;color:#374151;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
+    .lh-prev{left:-8px;}
+    .lh-next{right:-8px;}
+    .lh-nav:hover{background:#f3f4f6;}
+    @media(max-width:760px){.lh-strip .lh-card{width:80vw;}.lh-nav{display:none;}.lh-more{display:none;}}
+    .lh-card{border:1px solid #ececec;border-radius:18px;overflow:hidden;background:#fff;transition:.2s;cursor:pointer;}
+    .lh-card:hover{box-shadow:0 14px 34px rgba(0,0,0,.12);transform:translateY(-4px);}
+    .lh-photo{position:relative;height:150px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+    .lh-photo.gym{background:linear-gradient(135deg,#ff9966,#ff5e62);}
+    .lh-photo.wellness{background:linear-gradient(135deg,#56ab2f,#a8e063);}
+    .lh-photo.game{background:linear-gradient(135deg,#8e2de2,#4a00e0);}
+    .lh-photo.karaoke{background:linear-gradient(135deg,#fc466b,#3f5efb);}
+    .lh-photo.bilyard{background:linear-gradient(135deg,#11998e,#38ef7d);}
+    .lh-photo.bouling{background:linear-gradient(135deg,#f7971e,#ffd200);}
+    .lh-photo.kart{background:linear-gradient(135deg,#232526,#414345);}
+    .lh-photo.boshqa{background:linear-gradient(135deg,#2980b9,#6dd5fa);}
+    .lh-photo-ic{font-size:46px;position:relative;z-index:0;filter:drop-shadow(0 4px 8px rgba(0,0,0,.18));}
+    .lh-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;transition:transform .35s;}
+    .lh-card:hover .lh-photo img{transform:scale(1.07);}
+    .lh-badge{position:absolute;top:10px;left:10px;z-index:3;font-size:10.5px;font-weight:700;color:#F97316;background:rgba(255,255,255,.94);border-radius:999px;padding:3px 10px;box-shadow:0 1px 4px rgba(0,0,0,.1);}
+    .lh-rating{position:absolute;top:10px;right:10px;z-index:3;font-size:11.5px;font-weight:800;color:#d97706;background:rgba(255,255,255,.96);border-radius:999px;padding:3px 9px;box-shadow:0 1px 4px rgba(0,0,0,.12);}
+    .lh-247{position:absolute;bottom:10px;left:10px;z-index:3;font-size:10.5px;font-weight:800;color:#15803d;background:rgba(220,252,231,.96);border-radius:999px;padding:3px 10px;box-shadow:0 1px 4px rgba(0,0,0,.08);}
+    .lh-body{padding:12px 13px 13px;}
+    .lh-name{font-size:16px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .lh-addr{font-size:12.5px;color:#6b7280;line-height:1.4;margin-top:3px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
+    .lh-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:9px;padding-top:9px;border-top:1px solid #f3f3f3;}
+    .lh-comments{font-size:11.5px;color:#6b7280;font-weight:600;white-space:nowrap;}
+    .lh-comments b{color:#111827;font-weight:800;}
+    .lh-dist-mini{display:inline-flex;align-items:center;background:#eff6ff;color:#2563eb;font-size:11px;font-weight:700;border-radius:999px;padding:2px 9px;white-space:nowrap;}
+    .lh-empty{grid-column:1/-1;text-align:center;color:#9CA3AF;padding:40px 0;font-size:14px;}
+  </style>
+</head>
+<body>
+<div id="file-warn" style="display:none;max-width:720px;margin:12px auto 0;background:#FEF2F2;border:1px solid #FECACA;color:#B91C1C;border-radius:12px;padding:12px 16px;font-size:13px;line-height:1.5;text-align:left;position:relative;z-index:50;">⚠️ <b>Iltimos, tizimni server orqali oching!</b><br/>Bu sahifa <code>file://</code> orqali ochilgan — login va ma'lumotlar ishlamaydi.<br/>To'g'ri ishlash uchun: <b>http://localhost:8000</b> (yoki <code>start_server.bat</code> ni ishga tushiring).</div>
+<script>if(location.protocol==='file:'){var _w=document.getElementById('file-warn');if(_w)_w.style.display='block';}</script>
+
+  <!-- ============ SLAYD 1: HERO ============ -->
+  <section class="hero-full">
+    <div class="hero-bg active" style="background-image:url('images/hero-new1.jpg')"></div>
+    <div class="hero-bg" style="background-image:url('images/hero-new2.jpg')"></div>
+    <div class="hero-bg" style="background-image:url('images/hero-new3.jpg')"></div>
+    <div class="hero-bg" style="background-image:url('images/hero-new4.jpg')"></div>
+    <div class="hero-bg" style="background-image:url('images/hero-new5.jpg')"></div>
+    <div class="hero-bg" style="background-image:url('images/hero-new6.jpg')"></div>
+    <div class="hero-overlay"></div>
+    <header class="hero-nav">
+      <div class="container nav-inner">
+        <a href="#" class="logo">
+          <img src="images/logo.png" alt="ELGAKU logo" class="logo-img" />
+          <span class="logo-text light">ELGAKU</span>
+        </a>
+        <nav class="main-nav light" id="mainNav">
+          <a href="#haqida">ELGAKU haqida</a>
+
+          <div class="nav-drop">
+            <button class="nav-drop-btn">Hamkorlik
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="nav-drop-menu">
+              <a href="#join">Kompaniyalarga</a>
+              <a href="#join">Hamkorlarga</a>
+              <a href="#join">Influencerler</a>
+            </div>
+          </div>
+          <div class="nav-drop">
+            <button class="nav-drop-btn">Yana
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="nav-drop-menu">
+              <a href="javascript:void(0)" onclick="openRegion()">Shaharlar</a>
+              <a href="#boglanish">Savollar va javoblar</a>
+              <a href="#boglanish">Jamiyat</a>
+            </div>
+          </div>
+        </nav>
+        <div class="header-actions">
+          <button class="city-pick light" onclick="openRegion()">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11a7 7 0 1 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+            <span id="cityName">Shaharni tanlang</span>
+          </button>
+          <a href="login.html" class="link-btn light">Kirish</a>
+          <button class="burger light" id="burger" aria-label="Menyu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="hero-center">
+      <div class="hero-inner">
+        <span class="hero-eyebrow">O'zbekistondagi №1 sport platformasi</span>
+        <h1 class="hero-big">Har kimning<br/><span class="hero-accent">sport hayoti</span></h1>
+        <p class="hero-tag">Yaqin zalingizni xaritada toping, bir bosishda bron qiling va QR orqali kiring — 24/7 ochiq.</p>
+        <div class="hero-cta">
+          <button class="hero-btn primary" type="button" onclick="openHallsModal()">Markazlarni ko'rish</button>
+          <a class="hero-btn ghost" href="#markazlar">Qanday ishlaydi</a>
+        </div>
+        <div class="hero-stats">
+          <div class="hs-item"><b id="heroHallCount">136+</b><span>faol markaz</span></div>
+          <div class="hs-item"><b>14</b><span>viloyat</span></div>
+          <div class="hs-item"><b>24/7</b><span>ish rejimi</span></div>
+          <div class="hs-item"><b>★ 4.7</b><span>o'rtacha reyting</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="scroll-down" onclick="scrollNext(1)">
+      <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+
+
+  </section>
+
+  <!-- ============ SLAYD 2: 24/7 ============ -->
+  <section class="hero-full hero-alt">
+    <div class="hero-center">
+      <div class="hero-inner">
+        <span class="hero-eyebrow chip-green">24/7 — 365 kun</span>
+        <h1 class="hero-big">Sizga qulay vaqtda</h1>
+        <p class="hero-tag">Tonggi 6:00 yoki tungi 23:00 — eshik doim ochiq. QR yoki yuz bilan kiring.</p>
+        <div class="hero-feats">
+          <span>🚪 QR kirish</span>
+          <span>😀 Yuz bilan kirish</span>
+          <span>⏰ O'zingizga qulay vaqt</span>
+        </div>
+        <div class="hero-cta">
+          <button class="hero-btn primary" type="button" onclick="openHallsModal()">24/7 markazlarni topish</button>
+        </div>
+      </div>
+    </div>
+    <div class="scroll-down" onclick="scrollNext(2)">
+      <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+  </section>
+
+  <!-- ============ QORA: YAQIN ZALNI TOPING ============ -->
+  <section class="find-dark" id="haqida">
+    <div class="container find-inner">
+      <div class="find-text">
+        <div class="red-line"></div>
+        <h2>Yaqin zalingizni<br/>bir bosishda toping</h2>
+        <p>Butun O'zbekiston bo'ylab <b id="liveHallCount">136+</b> zal, game-klub va ko'ngilochar markaz.
+           Eng yaqinini xaritada toping, bron qiling va to'lang.</p>
+        <div class="feature-pills">
+          <span>🔎 Zal qidirish</span>
+          <span>📅 Bron</span>
+          <span>🚪 QR kirish</span>
+          <span>📊 Statistika</span>
+        </div>
+        <button class="all-halls-btn" onclick="openHallsModal()">
+          Barcha markazlar
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+
+      <!-- Markazlar fotokollaji -->
+      <div class="find-collage">
+        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=600&auto=format&fit=crop" alt="Sport zali" />
+        <img src="https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=600&auto=format&fit=crop" alt="SPA" />
+        <img src="https://images.unsplash.com/photo-1547394765-185e1e68f34e?q=80&w=600&auto=format&fit=crop" alt="Kiberklub" />
+        <span class="collage-badge">136+ faol markaz</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RO'YXATDAGI MARKAZLAR (API — jonli) ============ -->
+  <section class="live-halls" id="markazlar">
+    <div class="container">
+      <h2 class="lh-title">Platformadagi markazlar</h2>
+      <div class="lh-section">
+        <div class="lh-head">
+          <div>
+            <span class="lh-eyebrow">Ommabop sport joylari</span>
+            <h3 class="lh-subtitle"><span class="lh-subtitle-ic">🏋️</span> Zallar <span class="lh-cnt" id="sportCount"></span></h3>
+          </div>
+          <button class="lh-more" type="button" onclick="openHallsModal()">Barchasi <span class="lh-arr">→</span></button>
+        </div>
+        <div class="lh-strip-wrap">
+          <button class="lh-nav lh-prev" type="button" onclick="lhScroll('lhRowSport',-1)" aria-label="Oldingi">‹</button>
+          <div class="lh-strip" id="lhRowSport"><div class="lh-empty">Yuklanmoqda...</div></div>
+          <button class="lh-nav lh-next" type="button" onclick="lhScroll('lhRowSport',1)" aria-label="Keyingi">›</button>
+        </div>
+      </div>
+
+      <div class="lh-section">
+        <div class="lh-head">
+          <div>
+            <span class="lh-eyebrow">Dam olish maskanlari</span>
+            <h3 class="lh-subtitle"><span class="lh-subtitle-ic">🎉</span> Ko'ngil ochar markazlar <span class="lh-cnt" id="funCount"></span></h3>
+          </div>
+          <button class="lh-more" type="button" onclick="openHallsModal()">Barchasi <span class="lh-arr">→</span></button>
+        </div>
+        <div class="lh-strip-wrap">
+          <button class="lh-nav lh-prev" type="button" onclick="lhScroll('lhRowFun',-1)" aria-label="Oldingi">‹</button>
+          <div class="lh-strip" id="lhRowFun"><div class="lh-empty">Yuklanmoqda...</div></div>
+          <button class="lh-nav lh-next" type="button" onclick="lhScroll('lhRowFun',1)" aria-label="Keyingi">›</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ELGAKU ILOVASI (yagona ilova bo'limi) ============ -->
+  <section class="install1fit" id="yuklab-olish">
+    <div class="container">
+      <div class="fit-card">
+        <div class="fit-left">
+          <span class="fit-eyebrow">ELGAKU ILOVASI</span>
+          <h2>Hammasi bitta<br/>ilovada</h2>
+          <p>Markazlarni toping, bron qiling, QR orqali kiring va to'lovlarni onlayn amalga oshiring.</p>
+          <div class="fit-chips">
+            <span>🔎 Zal qidirish</span>
+            <span>📅 Bron</span>
+            <span>🚪 QR kirish</span>
+            <span>😀 Hikvision yuz-kirish</span>
+          </div>
+          <div class="fit-btns">
+            <a href="#" class="store-btn">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M17.05 12.54c-.03-2.89 2.36-4.28 2.47-4.35-1.35-1.97-3.44-2.24-4.18-2.27-1.78-.18-3.47 1.05-4.37 1.05-.9 0-2.29-1.03-3.77-1-1.94.03-3.72 1.13-4.72 2.86-2.01 3.49-.51 8.66 1.45 11.5.96 1.39 2.1 2.95 3.6 2.89 1.45-.06 2-.93 3.74-.93s2.24.93 3.77.9c1.55-.03 2.54-1.41 3.49-2.8.99-1.53 1.39-3.02 1.42-3.1-.03-.02-2.72-1.05-2.88-4.55zM14.12 4.59c.79-.96 1.32-2.29 1.18-3.62-1.14.05-2.52.76-3.34 1.71-.73.85-1.37 2.21-1.2 3.51 1.27.1 2.57-.64 3.36-1.6z"/></svg>
+              <span><small>Yuklab oling</small><b>App Store</b></span>
+            </a>
+            <a href="#" class="store-btn">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M3.6 2.3c-.3.3-.5.7-.5 1.2v17c0 .5.2.9.5 1.2l.1.1L13 12.7v-.2L3.7 2.2l-.1.1zM17 15.5l-3-3 3-3 3.6 1.9c1 .5 1 1.5 0 2l-3.6 2.1zM13.1 12.7L4.8 21c.3.3.8.3 1.4 0l9.9-5.6-3-2.7zM4.8 3.4L14 9.1l3-2.7L6.2 3.1c-.6-.3-1.1-.3-1.4.3z"/></svg>
+              <span><small>Yuklab oling</small><b>Google Play</b></span>
+            </a>
+          </div>
+        </div>
+
+        <div class="fit-phone">
+          <img src="images/app2.png" alt="ELGAKU ilova — to'lov, xarita, profil" class="mockup-img" />
+        </div>
+
+        <div class="fit-qr">
+          <div class="qr-real">
+            <svg viewBox="0 0 100 100" width="170" height="170">
+              <rect width="100" height="100" fill="#fff"/>
+              <g fill="#111">
+                <rect x="4" y="4" width="24" height="24"/><rect x="8" y="8" width="16" height="16" fill="#fff"/><rect x="12" y="12" width="8" height="8"/>
+                <rect x="72" y="4" width="24" height="24"/><rect x="76" y="8" width="16" height="16" fill="#fff"/><rect x="80" y="12" width="8" height="8"/>
+                <rect x="4" y="72" width="24" height="24"/><rect x="8" y="76" width="16" height="16" fill="#fff"/><rect x="12" y="80" width="8" height="8"/>
+                <rect x="34" y="6" width="5" height="5"/><rect x="44" y="6" width="5" height="5"/><rect x="54" y="6" width="5" height="5"/><rect x="62" y="8" width="5" height="5"/>
+                <rect x="34" y="16" width="5" height="5"/><rect x="50" y="16" width="5" height="5"/><rect x="60" y="18" width="5" height="5"/>
+                <rect x="6" y="34" width="5" height="5"/><rect x="16" y="34" width="5" height="5"/><rect x="26" y="34" width="5" height="5"/>
+                <rect x="34" y="30" width="5" height="5"/><rect x="42" y="30" width="5" height="5"/><rect x="52" y="30" width="5" height="5"/><rect x="62" y="30" width="5" height="5"/><rect x="70" y="30" width="5" height="5"/><rect x="80" y="30" width="5" height="5"/><rect x="88" y="30" width="5" height="5"/>
+                <rect x="34" y="40" width="5" height="5"/><rect x="46" y="40" width="5" height="5"/><rect x="56" y="40" width="5" height="5"/><rect x="66" y="40" width="5" height="5"/><rect x="76" y="40" width="5" height="5"/><rect x="86" y="40" width="5" height="5"/>
+                <rect x="6" y="44" width="5" height="5"/><rect x="16" y="44" width="5" height="5"/><rect x="26" y="44" width="5" height="5"/>
+                <rect x="34" y="48" width="5" height="5"/><rect x="42" y="48" width="5" height="5"/><rect x="54" y="48" width="5" height="5"/><rect x="64" y="48" width="5" height="5"/><rect x="74" y="48" width="5" height="5"/><rect x="84" y="48" width="5" height="5"/><rect x="92" y="48" width="4" height="5"/>
+                <rect x="6" y="54" width="5" height="5"/><rect x="18" y="54" width="5" height="5"/><rect x="28" y="54" width="5" height="5"/>
+                <rect x="36" y="58" width="5" height="5"/><rect x="46" y="58" width="5" height="5"/><rect x="58" y="58" width="5" height="5"/><rect x="68" y="58" width="5" height="5"/><rect x="78" y="58" width="5" height="5"/><rect x="88" y="58" width="5" height="5"/>
+                <rect x="34" y="66" width="5" height="5"/><rect x="44" y="66" width="5" height="5"/><rect x="54" y="66" width="5" height="5"/><rect x="64" y="66" width="5" height="5"/><rect x="74" y="66" width="5" height="5"/><rect x="84" y="66" width="5" height="5"/>
+                <rect x="34" y="76" width="5" height="5"/><rect x="44" y="76" width="5" height="5"/><rect x="54" y="76" width="5" height="5"/><rect x="64" y="76" width="5" height="5"/><rect x="74" y="76" width="5" height="5"/><rect x="84" y="76" width="5" height="5"/>
+                <rect x="34" y="86" width="5" height="5"/><rect x="44" y="86" width="5" height="5"/><rect x="56" y="86" width="5" height="5"/><rect x="66" y="86" width="5" height="5"/><rect x="76" y="86" width="5" height="5"/><rect x="86" y="86" width="5" height="5"/>
+                <rect x="44" y="92" width="5" height="5"/><rect x="54" y="92" width="5" height="5"/><rect x="64" y="92" width="5" height="5"/><rect x="74" y="92" width="5" height="5"/><rect x="84" y="92" width="5" height="5"/>
+              </g>
+            </svg>
+            <span class="qr-caption">App Store · Google Play</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <!-- ============ ABONEMENT / NARXLAR ============ -->
+  <section class="subs" id="narxlar">
+    <div class="container">
+      <h2 class="subs-title">O'zingizning abonementingizni tanlang</h2>
+      <p class="subs-sub">Har bir mavsumiy chipta do'stlar uchun bepul mehmon pasportiga ega</p>
+      <div class="subs-grid">
+
+        <div class="sub-card">
+          <div class="sub-visual g-green"><span>90</span></div>
+          <div class="sub-body">
+            <div class="sub-dur c-green">3 oylik</div>
+            <div class="sub-price"><b>44 997</b> <span>so'm / oyiga</span></div>
+            <div class="sub-old">134 990 so'm</div>
+            <div class="sub-feat">
+              <span>👤 2 bepul mehmon abonementi</span>
+              <span>🏟 24+ zal</span>
+            </div>
+            
+          </div>
+        </div>
+
+        <div class="sub-card">
+          <div class="sub-visual g-pink"><span>180</span></div>
+          <div class="sub-body">
+            <div class="sub-dur c-pink">6 oylik</div>
+            <div class="sub-price"><b>30 832</b> <span>so'm / oyiga</span></div>
+            <div class="sub-old">184 990 so'm</div>
+            <div class="sub-feat">
+              <span>👤 2 bepul mehmon abonementi</span>
+              <span>🏟 24+ zal</span>
+            </div>
+            
+          </div>
+        </div>
+
+        <div class="sub-card popular">
+          <div class="pop-badge">✨ Eng mashhur</div>
+          <div class="sub-visual g-blue"><span>365</span></div>
+          <div class="sub-body">
+            <div class="sub-dur c-blue">12 oylik</div>
+            <div class="sub-price"><b>14 999</b> <span>so'm / oyiga</span></div>
+            <div class="sub-old">179 990 so'm</div>
+            <div class="sub-feat">
+              <span>👤 2 bepul mehmon abonementi</span>
+              <span>🏟 24+ zal</span>
+            </div>
+            
+          </div>
+        </div>
+
+        <div class="sub-card">
+          <div class="sub-visual g-orange"><span>730</span></div>
+          <div class="sub-body">
+            <div class="sub-dur c-orange">24 oylik</div>
+            <div class="sub-price"><b>13 333</b> <span>so'm / oyiga</span></div>
+            <div class="sub-old">319 990 so'm</div>
+            <div class="sub-feat">
+              <span>👤 2 bepul mehmon abonementi</span>
+              <span>🏟 24+ zal</span>
+            </div>
+            
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+  <!-- ============ ELGAKU AI ============ -->
+  <section class="ai">
+    <div class="container ai-inner">
+      <div class="ai-text">
+        <span class="ai-badge">✨ ELGAKU AI</span>
+        <h2>Shaxsiy sun'iy intellekt <span class="orange">murabbiyingiz</span></h2>
+        <p>AI maqsad va darajangizni tahlil qilib, har kuni mashg'ulot rejasini tuzadi. Kamera orqali mashq shaklini to'g'rilaydi va hafta hisobotini beradi.</p>
+        <div class="ai-points">
+          <span>📅 Kunlik reja</span>
+          <span>📷 Kamera — shakl tekshiruv</span>
+          <span>📈 Haftalik hisobot</span>
+        </div>
+      </div>
+      <div class="ai-card">
+        <div class="ai-card-top"><span class="dot live"></span> ELGAKU AI — murabbiy</div>
+        <div class="ai-msg">Salom! Bugun <b>30 daqiqalik yonish</b> mashqini taklif qilaman. Tayyormisiz? 🏃</div>
+        <div class="ai-replies">
+          <button class="ai-chip">Ha, boshlaymiz!</button>
+          <button class="ai-chip outline">Keyinroq</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BIZGA QO'SHILING ============ -->
+  <section class="join" id="join">
+    <div class="container join-inner">
+      <div class="join-left">
+        <span class="join-badge">🤝 Hamkorlik</span>
+        <h2>Zal yoki ko'ngilochar<br/>markazingiz bormi?</h2>
+        <p>ELGAKU — sport va ko'ngilochar markazlar super-ilovasi. Zalingizni qo'shing, bron va to'lovlarni onlayn qabul qiling, mijozlar bazangizni kengaytiring.</p>
+        <button class="join-cta" onclick="openPartnerReq()">Hamkor bo'lish
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <div class="join-stats">
+          <div><b id="joinCount">0</b><span>faol markaz</span></div>
+          <div><b>24+</b><span>shahar</span></div>
+          <div><b>12k+</b><span>mijoz</span></div>
+        </div>
+      </div>
+
+  </section>
+
+  <!-- ============ FOOTER (ko'p ustunli) ============ -->
+  <footer class="foot-cols" id="boglanish">
+    <div class="container foot-grid">
+      <div class="f-col">
+        <div class="logo"><img src="images/logo.png" alt="ELGAKU" class="logo-img small" /><b>ELGAKU</b></div>
+        <p>Sport va ko'ngilochar markazlar uchun super-ilova. O'zbekiston bo'ylab.</p>
+      </div>
+      <div class="f-col">
+        <h4>ELGAKU haqida</h4>
+        <a href="#haqida">Biz haqimizda</a><a href="#haqida">Missiya</a><a href="#haqida">Karyera</a>
+      </div>
+      <div class="f-col">
+        <h4>Zallar uchun</h4>
+        <a href="#markazlar">Ochiq platforma</a><a href="#join">Hikvision integratsiya</a><a href="#join">Franchayzing</a>
+      </div>
+      <div class="f-col">
+        <h4>Mijozlar uchun</h4>
+        <a href="#markazlar">Brendlar</a><a href="#join">Korporativ obuna</a><a href="#boglanish">Yordam</a>
+      </div>
+      <div class="f-col">
+        <h4>Bog'lanish</h4>
+        <a href="tel:1226">Qo'llab-quvvatlash: 1226</a>
+        <a href="mailto:info@elgaku.uz">info@elgaku.uz</a>
+      </div>
+    </div>
+    <div class="container foot-bottom">
+      <span>© 2026 ELGAKU — Sport va ko'ngilochar markazlar super-ilovasi</span>
+
+    </div>
+  </footer>
+
+  <!-- ============ REGION (SHAHAR TANLASH) ============ -->
+  <div class="region-mask" id="regionMask" onclick="closeRegionBg(event)">
+    <div class="region-modal">
+      <div class="region-head">
+        <h3>Region</h3>
+        <button class="region-close" onclick="closeRegion()">✕</button>
+      </div>
+      <button class="geo-btn" onclick="detectLocation()">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+        <span id="geoTxt">Joylashuvni aniqlash</span>
+      </button>
+      <div class="region-list">
+        <div class="region-item all"><span class="flag-circle">🇺🇿</span> Butun O'zbekiston</div>
+        <div class="region-item" onclick="pickCity('Toshkent')">Toshkent</div>
+        <div class="region-item" onclick="pickCity('Samarqand')">Samarqand</div>
+        <div class="region-item" onclick="pickCity('Buxoro')">Buxoro</div>
+        <div class="region-item" onclick="pickCity('Andijon')">Andijon</div>
+        <div class="region-item" onclick="pickCity('Farg\'ona')">Farg'ona</div>
+        <div class="region-item" onclick="pickCity('Namangan')">Namangan</div>
+        <div class="region-item" onclick="pickCity('Qarshi')">Qarshi</div>
+        <div class="region-item" onclick="pickCity('Navoiy')">Navoiy</div>
+        <div class="region-item" onclick="pickCity('Urganch')">Urganch</div>
+        <div class="region-item" onclick="pickCity('Jizzax')">Jizzax</div>
+        <div class="region-item" onclick="pickCity('Termiz')">Termiz</div>
+        <div class="region-item" onclick="pickCity('Nukus')">Nukus</div>
+        <div class="region-item" onclick="pickCity('Guliston')">Guliston</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ COOKIE BANNER ============ -->
+  <div class="cookie" id="cookie">
+    <span>🍪 Sayt yaxshi ishlashi uchun <b>kukilardan</b> foydalanamiz.</span>
+    <button class="cookie-btn" onclick="document.getElementById('cookie').style.display='none'">OK</button>
+  </div>
+
+  <!-- ============ BARCHA ZALLAR MODAL ============ -->
+  <div class="halls-mask" id="hallsMask" onclick="closeHallsBg(event)">
+    <div class="halls-modal">
+      <div class="halls-top">
+        <div class="halls-search">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4-4"/></svg>
+          <input type="text" id="hallsSearch" placeholder="Qidirish" oninput="renderHallsList()" />
+        </div>
+        <select id="hallsType" onchange="renderHallsList()">
+          <option value="">Barcha turlar</option>
+          <option value="gym">Fitness</option>
+          <option value="bilyard">Bilyard</option>
+          <option value="karaoke">Karaoke</option>
+          <option value="game">Game-klub</option>
+          <option value="bouling">Bouling</option>
+          <option value="kart">Go-kart</option>
+          <option value="wellness">Wellness / SPA</option>
+          <option value="boshqa">Boshqa</option>
+        </select>
+        <label class="halls-check"><input type="checkbox" id="hallsWomen" onchange="renderHallsList()" /> Ayollar uchun zallar</label>
+        <button class="halls-close" onclick="closeHallsModal()">✕</button>
+      </div>
+      <div class="halls-body">
+        <div class="halls-left">
+          <h3 id="hallsCityTitle">Barcha markazlar — <span id="hallsCount">0</span>+</h3>
+          <div id="hallsListBox"></div>
+        </div>
+        <div class="halls-map" id="hallsMap">
+          <iframe id="hallsYmap" title="Yandex xarita" loading="lazy"
+            src="https://yandex.uz/map-widget/v1/?ll=64.0%2C41.3&z=6&lang=uz_UZ"
+            style="position:absolute;inset:0;width:100%;height:100%;border:0;display:block"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ HAMKOR SO'ROVI MODAL ============ -->
+  <div class="req-mask" id="reqMask" onclick="closeReqBg(event)">
+    <div class="req-modal">
+      <button class="req-close" onclick="closeReq()">✕</button>
+      <div id="reqFormBox">
+        <h2>Hamkor bo'lish uchun so'rov</h2>
+        <p class="req-sub">Ma'lumotlarni to'ldiring — operatorlarimiz tez orada siz bilan bog'lanishadi.</p>
+        <form id="reqForm" onsubmit="submitReq(event)">
+          <label class="req-sec">1. Asosiy ma'lumotlar</label>
+          <div class="req-grid">
+            <div class="req-f">
+              <label>Hamkor turi</label>
+              <select name="htype" required>
+                <option value="">Tanlang</option>
+                <option value="fitness">Sport / fitness zali</option>
+                <option value="bilyard">Bilyard</option>
+                <option value="game">Game-kluby</option>
+                <option value="basseyn">Basseyn</option>
+                <option value="spa">SPA / massaj</option>
+                <option value="boshqa">Boshqa</option>
+              </select>
+            </div>
+            <div class="req-f">
+              <label>Zal / brend nomi</label>
+              <input type="text" name="bname" placeholder="masalan, LEADER FITNESS" required />
+            </div>
+            <div class="req-f">
+              <label>Tashkilot shakli</label>
+              <select name="org" required>
+                <option value="">Tanlang</option>
+                <option value="MChJ">MChJ</option>
+                <option value="IP">Yakka tartibdagi tadbirkor (IP)</option>
+                <option value="Hususiy">Hususiy</option>
+                <option value="boshqa">Boshqa</option>
+              </select>
+            </div>
+            <div class="req-f">
+              <label>Egasi F.I.Sh.</label>
+              <input type="text" name="owner" placeholder="To'liq ism familiya" required />
+            </div>
+            <div class="req-f">
+              <label>Telefon</label>
+              <input type="tel" name="phone" placeholder="+998 90 123 45 67" required />
+            </div>
+          </div>
+
+          <label class="req-sec">2. Manzil va ish vaqti</label>
+          <div class="req-grid">
+            <div class="req-f span2">
+              <label>Manzil (shahar, ko'cha, uy)</label>
+              <input type="text" name="addr" placeholder="Shahar, ko'cha, uy" required />
+            </div>
+            <div class="req-f">
+              <label>Ish vaqti</label>
+              <input type="text" name="hours" placeholder="08:00 - 23:00" required />
+            </div>
+          </div>
+
+          <label class="req-sec">3. Biznes</label>
+          <div class="req-grid">
+            <div class="req-f span2">
+              <label>Qisqa tavsif (uskunalar, xizmatlar, quvvat)</label>
+              <textarea name="biz" rows="3" placeholder="Nima taklif qilasiz? Nechta mashg'ulot zali, nechta mijoz..."></textarea>
+            </div>
+          </div>
+
+          <button type="submit" class="req-submit">So'rov yuborish</button>
+        </form>
+      </div>
+      <div id="reqDoneBox" style="display:none;text-align:center;padding:30px 10px;">
+        <div class="req-check">✓</div>
+        <h2>So'rovingiz muvaffaqiyatli yuborildi!</h2>
+        <p>Tez orada operatorlarimiz siz bilan bog'lanishadi.<br/>Kutganingiz uchun rahmat!</p>
+        <button class="req-submit" onclick="closeReq()">Yopish</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ===== TILLAR: O'zbek (lotin, default) / Ўзбекча (крил) / Русский ===== */
+    var curLang = 'uz_lat';
+    try{ curLang = localStorage.getItem('elgaku_lang') || 'uz_lat'; }catch(e){}
+    var CYR = {'a':'а','b':'б','d':'д','e':'е','f':'ф','g':'г','h':'ҳ','i':'и','j':'ж','k':'к','l':'л','m':'м','n':'н','o':'о','p':'п','q':'қ','r':'р','s':'с','t':'т','u':'у','v':'в','x':'х','y':'й','z':'з','c':'с',
+    'A':'А','B':'Б','D':'Д','E':'Е','F':'Ф','G':'Г','H':'Ҳ','I':'И','J':'Ж','K':'К','L':'Л','M':'М','N':'Н','O':'О','P':'П','Q':'Қ','R':'Р','S':'С','T':'Т','U':'У','V':'В','X':'Х','Y':'Й','Z':'З','C':'С'};
+    function latToCyr(s){
+      s = String(s==null?'':s);
+      s = s.replace(/yo'/g,'йў').replace(/Yo'/g,'Йў').replace(/YO'/g,'ЙЎ');
+      s = s.replace(/oʻ/g,'ў').replace(/Oʻ/g,'Ў').replace(/o'/g,'ў').replace(/O'/g,'Ў');
+      s = s.replace(/gʻ/g,'ғ').replace(/Gʻ/g,'Ғ').replace(/g'/g,'ғ').replace(/G'/g,'Ғ');
+      s = s.replace(/sh/g,'ш').replace(/Sh/g,'Ш').replace(/SH/g,'Ш');
+      s = s.replace(/ch/g,'ч').replace(/Ch/g,'Ч').replace(/CH/g,'Ч');
+      s = s.replace(/ng/g,'нг').replace(/Ng/g,'Нг').replace(/NG/g,'НГ');
+      s = s.replace(/ya/g,'я').replace(/Ya/g,'Я').replace(/YA/g,'Я');
+      s = s.replace(/yo/g,'ё').replace(/Yo/g,'Ё').replace(/YO/g,'Ё');
+      s = s.replace(/yu/g,'ю').replace(/Yu/g,'Ю').replace(/YU/g,'Ю');
+      s = s.replace(/ʼ/g,'ъ').replace(/`/g,'ъ').replace(/'/g,'ъ');
+      var out='';
+      for(var i=0;i<s.length;i++){ var c=s[i]; out += CYR[c] || c; }
+      return out;
+    }
+    var RU_DICT = {
+"Kirish":"Вход","Resepshn":"Ресепшн","ELGAKU haqida":"Об ELGAKU","Hamkorlik":"Сотрудничество",
+"Yana":"Ещё","Shaharlar":"Города","Savollar va javoblar":"Вопросы и ответы","Jamiyat":"Сообщество",
+"Shaharni tanlang":"Выберите город","Kompaniyalarga":"Компаниям","Hamkorlarga":"Партнёрам","Influencerler":"Инфлюенсерам",
+"O'zbekistondagi №1 sport platformasi":"№1 спортивная платформа Узбекистана","Har kimning":"Спорт для каждого",
+"sport hayoti":"спортивная жизнь","Yaqin zalingizni xaritada toping, bir bosishda bron qiling va QR orqali kiring — 24/7 ochiq.":"Найдите зал на карте, бронируйте в один клик и входите по QR — 24/7.",
+"Markazlarni ko'rish":"Смотреть центры","Qanday ishlaydi":"Как это работает",
+"Ko'ngil ochar markazlar resepshn paneli":"Ресепшн-панель развлекательных центров","Boshqa":"Другое",
+"Butun O'zbekiston":"Весь Узбекистан","Joylashuv aniqlanmoqda...":"Определение местоположения...",
+"Brauzer geolokatsiyani qo'llamaydi":"Браузер не поддерживает геолокацию",
+"Zal egasi paneli":"Панель владельца зала","Operator paneli":"Панель оператора",
+"Barcha huquqlar himoyalangan":"Все права защищены","Aloqa":"Контакты","Manzil":"Адрес"
+    };
+    function t(s){ if(curLang==='uz') return latToCyr(s); if(curLang==='ru') return RU_DICT[s]!=null?RU_DICT[s]:s; return s; }
+    function cyrTextNode(n){
+      var full = n.nodeValue || ''; var trimmed = full.trim(); if(!trimmed) return;
+      if(n._lat === undefined) n._lat = full;
+      var src = n._lat.trim();
+      var out = (curLang==='uz') ? latToCyr(src) : (RU_DICT[src]!=null ? RU_DICT[src] : src);
+      var lead = full.match(/^\s*/)[0], trail = full.match(/\s*$/)[0];
+      var res = lead + out + trail;
+      if(res !== full) n.nodeValue = res;
+    }
+    function convText(n){
+      if(!n || n.nodeType!==3 || !n.nodeValue || !n.nodeValue.trim()) return;
+      var p = n.parentElement;
+      if(p && /^(SCRIPT|STYLE|TEXTAREA|INPUT|SELECT|OPTION)$/i.test(p.tagName)) return;
+      cyrTextNode(n);
+    }
+    function applyLangText(){
+      var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false), n, arr=[];
+      while(n=w.nextNode()) arr.push(n);
+      for(var i=0;i<arr.length;i++) convText(arr[i]);
+      if(curLang!=='uz_lat'){
+        var ph = document.querySelectorAll('[placeholder],[title]');
+        for(var j=0;j<ph.length;j++){
+          var el = ph[j];
+          if(el.tagName==='SCRIPT'||el.tagName==='STYLE') continue;
+          if(el.dataset.plat===undefined) el.dataset.plat = el.getAttribute('placeholder') || el.getAttribute('title') || '';
+          var src = el.dataset.plat;
+          var out = (curLang==='uz') ? latToCyr(src) : (RU_DICT[src]!=null?RU_DICT[src]:src);
+          if(el.hasAttribute('placeholder')) el.setAttribute('placeholder', out);
+          else el.setAttribute('title', out);
+        }
+      }
+    }
+    function restoreLangText(){
+      var w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false), n, arr=[];
+      while(n=w.nextNode()) arr.push(n);
+      for(var i=0;i<arr.length;i++){ if(arr[i]._lat!==undefined){ arr[i].nodeValue=arr[i]._lat; delete arr[i]._lat; } }
+      var ph = document.querySelectorAll('[data-plat]');
+      for(var j=0;j<ph.length;j++){ var el=ph[j]; if(el.hasAttribute('placeholder')) el.setAttribute('placeholder', el.dataset.plat); else if(el.hasAttribute('title')) el.setAttribute('title', el.dataset.plat); delete el.dataset.plat; }
+    }
+    function applyLang(){
+      if(curLang==='uz_lat') restoreLangText(); else applyLangText();
+      var uzT = document.getElementById('uz-toggle-btn');
+      if(uzT){ uzT.textContent = (curLang==='uz') ? 'Ўзб' : "O'zb"; uzT.classList.toggle('active', curLang==='uz'||curLang==='uz_lat'); }
+      var ruB = document.querySelector('[data-l="ru"]');
+      if(ruB) ruB.classList.toggle('active', curLang==='ru');
+    }
+    function setLang(l){ curLang = l; try{ localStorage.setItem('elgaku_lang', l); }catch(e){} applyLang(); }
+    function toggleUzbekScript(){ setLang(curLang==='uz' ? 'uz_lat' : 'uz'); }
+    if(window.MutationObserver){
+      new MutationObserver(function(muts){
+        if(curLang==='uz_lat') return;
+        for(var i=0;i<muts.length;i++){
+          var m = muts[i];
+          if(m.type==='characterData'){ convText(m.target); continue; }
+          if(m.addedNodes){ for(var k=0;k<m.addedNodes.length;k++){ var nn=m.addedNodes[k]; if(nn.nodeType===3) convText(nn); else if(nn.nodeType===1){ var w2=document.createTreeWalker(nn,NodeFilter.SHOW_TEXT,null,false),t2; while(t2=w2.nextNode()) convText(t2); } } }
+        }
+      }).observe(document.body, {childList:true, subtree:true, characterData:true});
+    }
+    if(!document.getElementById('lang-css')){
+      var ls=document.createElement('style'); ls.id='lang-css';
+      ls.textContent='.langs .lang-btn{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);color:#fff;border-radius:8px;padding:3px 9px;font-size:12px;font-weight:700;cursor:pointer}.langs .lang-btn.active{background:#F97316;border-color:#F97316;color:#fff}';
+      document.head.appendChild(ls);
+    }
+    function openRegion(){ document.getElementById('regionMask').classList.add('show'); }
+    function closeRegion(){ document.getElementById('regionMask').classList.remove('show'); }
+    function closeRegionBg(e){ if(e.target.id==='regionMask') closeRegion(); }
+    function pickCity(name){
+      document.getElementById('cityName').textContent = name;
+      try{ localStorage.setItem('elgaku_city', name); }catch(e){}
+      SELECTED_CITY = (name === 'Butun O\'zbekiston') ? '' : name;
+      var ck = cityKeyOf(name);
+      if(ck){
+        var c = CITY_COORDS[ck];
+        USER_LOC = {lat: c[1], lng: c[0], city: ck};
+        try{ localStorage.setItem('elgaku_user_loc', JSON.stringify(USER_LOC)); }catch(e){}
+      } else if(name.indexOf('Joy:') === 0){
+        var m = name.match(/([\d.]+),\s*([\d.]+)/);
+        if(m){
+          USER_LOC = {lat: parseFloat(m[1]), lng: parseFloat(m[2])};
+          try{ localStorage.setItem('elgaku_user_loc', JSON.stringify(USER_LOC)); }catch(e){}
+        }
+      }
+      closeRegion();
+      loadHallsOld();
+      renderHallsList();
+    }
+    function detectLocation(){
+      var t = document.getElementById('geoTxt');
+      if(!navigator.geolocation){ t.textContent = "Brauzer geolokatsiyani qo'llamaydi"; return; }
+      t.textContent = "Joylashuv aniqlanmoqda...";
+      navigator.geolocation.getCurrentPosition(
+        function(pos){
+          var lat = pos.coords.latitude.toFixed(4), lon = pos.coords.longitude.toFixed(4);
+          pickCity('Joy: '+lat+', '+lon);
+        },
+        function(err){
+          t.textContent = "Ruxsat berilmadi. Shaharni qo'ldan tanlang.";
+        },
+        {enableHighAccuracy:true, timeout:8000, maximumAge:60000}
+      );
+    }
+    var bgs = document.querySelectorAll('.hero-full .hero-bg');
+    var bi = 0;
+    setInterval(function(){
+      if(!bgs.length) return;
+      bgs[bi].classList.remove('active');
+      bi = (bi+1) % bgs.length;
+      bgs[bi].classList.add('active');
+    }, 4500);
+    var SELECTED_CITY = '';
+    try{
+      var saved = localStorage.getItem('elgaku_city');
+      if(saved){
+        document.getElementById('cityName').textContent = saved;
+        SELECTED_CITY = (saved === 'Butun O\'zbekiston') ? '' : saved;
+      }
+    }catch(e){}
+    function scrollNext(n){
+      window.scrollTo({top: window.innerHeight * n, behavior:'smooth'});
+    }
+    var burger = document.getElementById('burger'), nav = document.getElementById('mainNav');
+    burger && burger.addEventListener('click', function(){ nav.classList.toggle('open'); });
+
+    /* ===== BARCHA ZALLAR — operator ma'lumotlaridan ===== */
+    var DEFAULT_HALLS = [
+      {name:"LEADER FITNESS", type:"fitness", rating:10, desc:"Trenajor zal", addr:"ulitsa Islama Karimova", women:false, x:22, y:38},
+      {name:"Nurabad Cycling", type:"fitness", rating:10, desc:"Toza havodagi maydon", addr:"ploshchad Registon", women:false, x:48, y:62},
+      {name:"Turon Pool", type:"basseyn", rating:10, desc:"Hovuz", addr:"mahalliy skver", women:false, x:66, y:44},
+      {name:"Fitness Pro 24/7", type:"fitness", rating:4.8, desc:"24/7 ochiq trenajor zali", addr:"Markaz, 12-uy", women:false, x:35, y:28},
+      {name:"Bilyard Club 8", type:"bilyard", rating:4.9, desc:"8 professional stol", addr:"Amir Temur shoh", women:false, x:58, y:55},
+      {name:"Game Zone", type:"game", rating:4.7, desc:"Game-kluby va PlayStation", addr:"Boulevard", women:false, x:78, y:30},
+      {name:"Ladies Gym", type:"fitness", rating:4.9, desc:"Faqat ayollar uchun", addr:"Yoshlar maydoni", women:true, x:30, y:72}
+    ];
+
+    var CITY_COORDS = {
+      "Toshkent shahri":[69.2401,41.2995], "Nurafshon":[69.61,41.61], "Angren":[70.06,40.13],
+      "Bekobod":[69.31,40.22], "Olmaliq":[69.59,40.85], "Ohangaron":[69.64,40.91],
+      "Chirchiq":[69.58,41.56], "Yangiyo'l":[69.05,41.11], "Andijon":[72.34,40.78],
+      "Xonabod":[72.98,40.81], "Buxoro":[64.42,39.77], "Kogon":[64.55,39.72],
+      "Jizzax":[67.84,40.10], "Qarshi":[65.79,38.86], "Shahrisabz":[66.83,39.06],
+      "Navoiy":[65.38,40.08], "Zarafshon":[64.22,41.57], "Namangan":[71.67,40.99],
+      "Samarqand":[66.96,39.65], "Kattaqo'rg'on":[66.26,39.90], "Termiz":[67.28,37.22],
+      "Guliston":[68.78,40.49], "Yangiyer":[68.82,40.27], "Shirin":[69.14,40.23],
+      "Farg'ona":[71.78,40.39], "Marg'ilon":[71.72,40.47], "Quvasoy":[71.98,40.30],
+      "Qo'qon":[70.94,40.53], "Urganch":[60.63,41.55], "Xiva":[60.36,41.38],
+      "Nukus":[59.60,42.46]
+    };
+    var USER_LOC = null;
+    try{ var _loc = JSON.parse(localStorage.getItem('elgaku_user_loc') || 'null'); if(_loc && _loc.lat) USER_LOC = _loc; }catch(e){}
+    function haversineKm(a, b){
+      var R = 6371;
+      var dLat = (b[1] - a.lat) * Math.PI / 180;
+      var dLng = (b[0] - a.lng) * Math.PI / 180;
+      var la = a.lat * Math.PI / 180, lb = b[1] * Math.PI / 180;
+      var h = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(la)*Math.cos(lb)*Math.sin(dLng/2)*Math.sin(dLng/2);
+      return 2 * R * Math.asin(Math.sqrt(h));
+    }
+    function distText(km){ return km < 1 ? Math.round(km*1000) + ' m' : (Math.round(km*10)/10) + ' km'; }
+    function hallCoordsOf(h){
+      var d = h.details || {};
+      if(d.lat && d.lng) return [parseFloat(d.lng), parseFloat(d.lat)];
+      var c = CITY_COORDS[String(d.city || '').trim()];
+      if(c) return c;
+      return null;
+    }
+    function hallDistKm(h){
+      if(!USER_LOC) return null;
+      var c = h.lnglat || hallCoordsOf(h);
+      if(!c) return null;
+      return haversineKm(USER_LOC, c);
+    }
+    function cityKeyOf(input){
+      var s = String(input || '').trim().toLowerCase();
+      if(!s) return null;
+      for(var k in CITY_COORDS){
+        if(k.toLowerCase() === s) return k;
+        if(k.toLowerCase().replace(/ shahri$/, '') === s) return k;
+      }
+      return null;
+    }
+    function cityFilter(h){
+      if(!SELECTED_CITY) return true;
+      var s = SELECTED_CITY.toLowerCase();
+      if(s.indexOf('joy:') === 0) return true;
+      var d = h.details || {};
+      var c = String(d.city || '').toLowerCase();
+      var r = String(d.region || '').toLowerCase();
+      return (c && c.indexOf(s) >= 0) || (r && r.indexOf(s) >= 0) || (c && s.indexOf(c) >= 0);
+    }
+    function typeLabel(t){ return {gym:'Fitness',bilyard:'Bilyard',karaoke:'Karaoke',game:'Game-klub',bouling:'Bouling',kart:'Go-kart',wellness:'Wellness / SPA'}[t] || 'Markaz'; }
+    function typeIcon(t){ return {gym:'🏋️',bilyard:'🎱',karaoke:'🎤',game:'🎮',bouling:'🎳',kart:'🏎️',wellness:'🧘'}[t] || '🏢'; }
+
+    function readHallsData(){
+      var arr = [];
+      try{ arr = JSON.parse(localStorage.getItem('elgaku_halls_live') || '[]'); }catch(e){}
+      if(!arr || !arr.length){
+        try{ arr = JSON.parse(localStorage.getItem('elgaku_halls_v1') || '[]'); }catch(e){}
+      }
+      if(!arr || !arr.length) return DEFAULT_HALLS;
+      return arr.map(function(h,i){
+        var d = h.details || {};
+        var addrParts = [];
+        if(d.address) addrParts.push(String(d.address));
+        var al = String(d.address || '').toLowerCase();
+        if(d.city && al.indexOf(String(d.city).toLowerCase()) < 0) addrParts.push(String(d.city));
+        if(d.district && al.indexOf(String(d.district).toLowerCase()) < 0) addrParts.push(String(d.district));
+        var addr = addrParts.join(', ') || 'Manzil kiritilmagan';
+        var c = hallCoordsOf(h);
+        return {
+          id: h.id || i, name: h.name || "Zal " + (i+1),
+          type: h.type || "gym",
+          rating: (d.rating) || 10,
+          desc: (d.desc) || typeLabel(h.type || 'gym') + " zali",
+          addr: addr, women: !!d.women,
+          city: d.city || '', region: d.region || '',
+          rev_avg: h.rev_avg || 0, rev_cnt: h.rev_cnt || 0,
+          lnglat: c,
+          photos: d.photosList || [], logo: d.logo || '',
+          phone: h.phone || '', hours: d.hours || ''
+        };
+      });
+    }
+
+    function loadLiveHalls(){
+      fetch('/api/halls', {cache:'no-store'})
+        .then(function(r){ return r.json(); })
+        .then(function(list){
+          try{ localStorage.setItem('elgaku_halls_live', JSON.stringify(list || [])); }catch(e){}
+          renderHallsList();
+        })
+        .catch(function(){});
+    }
+
+    function openHallsModal(){
+      document.getElementById('hallsMask').classList.add('show');
+      document.body.style.overflow = 'hidden';
+      loadLiveHalls();
+      renderHallsList();
+    }
+    function closeHallsModal(){
+      document.getElementById('hallsMask').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+    function closeHallsBg(e){ if(e.target.id==='hallsMask') closeHallsModal(); }
+
+    function updateHallsMap(list){
+      var fr = document.getElementById('hallsYmap');
+      if(!fr) return;
+      var pts = [], lngs = [], lats = [];
+      list.forEach(function(h){
+        if(!h.lnglat) return;
+        pts.push(h.lnglat[0] + ',' + h.lnglat[1] + ',pm2rdm');
+        lngs.push(h.lnglat[0]); lats.push(h.lnglat[1]);
+      });
+      var ll = [64.0, 41.3], z = 6;
+      if(lngs.length){
+        var minLng = Math.min.apply(null, lngs), maxLng = Math.max.apply(null, lngs);
+        var minLat = Math.min.apply(null, lats), maxLat = Math.max.apply(null, lats);
+        ll = [(minLng + maxLng) / 2, (minLat + maxLat) / 2];
+        var span = Math.max(maxLng - minLng, (maxLat - minLat) * 1.7);
+        z = span < 1 ? 9 : span < 2.5 ? 8 : span < 5 ? 7 : 6;
+      }
+      var src = 'https://yandex.uz/map-widget/v1/?ll=' + ll[0] + '%2C' + ll[1] + '&z=' + z
+        + (pts.length ? '&pt=' + pts.join('~') : '') + '&lang=uz_UZ';
+      if(fr.src !== src) fr.src = src;
+    }
+
+    function renderHallsList(){
+      var all = readHallsData();
+      var q = (document.getElementById('hallsSearch').value||'').toLowerCase();
+      var t = document.getElementById('hallsType').value;
+      var w = document.getElementById('hallsWomen').checked;
+      var list = all.filter(function(h){
+        if(q && h.name.toLowerCase().indexOf(q)<0 && h.desc.toLowerCase().indexOf(q)<0) return false;
+        if(t && h.type!==t) return false;
+        if(w && !h.women) return false;
+        if(SELECTED_CITY && SELECTED_CITY.indexOf('joy:') < 0){
+          var s = SELECTED_CITY.toLowerCase();
+          if(h.city.toLowerCase().indexOf(s) < 0 && h.region.toLowerCase().indexOf(s) < 0) return false;
+        }
+        return true;
+      });
+      list = list.slice().sort(function(a,b){
+        if((b.rev_cnt||0) !== (a.rev_cnt||0)) return (b.rev_cnt||0) - (a.rev_cnt||0);
+        if((b.rev_avg||0) !== (a.rev_avg||0)) return (b.rev_avg||0) - (a.rev_avg||0);
+        return 0;
+      });
+      var tt = document.getElementById('hallsCityTitle');
+      if(tt) tt.innerHTML = (SELECTED_CITY ? esc(SELECTED_CITY) : 'Barcha markazlar') + ' — <span id="hallsCount">' + list.length + '</span>+';
+      var box = document.getElementById('hallsListBox');
+      var sportL = [], funL = [];
+      list.forEach(function(h){
+        if(h.type==='gym' || h.type==='wellness') sportL.push(h); else funL.push(h);
+      });
+      var html = '';
+      var groups = [];
+      if(sportL.length) groups.push(['Zallar', '🏋️', sportL]);
+      if(funL.length) groups.push(["Ko'ngil ochar markazlar", '🎉', funL]);
+      groups.forEach(function(g){
+        html += '<div class="hgroup"><span class="hg-ic">'+g[1]+'</span> '+g[0]+' <b>'+g[2].length+'</b></div>';
+        g[2].forEach(function(h){
+          var dist = USER_LOC ? hallDistKm(h) : null;
+          var phInner = (h.photos && h.photos.length)
+            ? '<img src="'+h.photos[0]+'" loading="lazy" style="width:48px;height:48px;border-radius:12px;object-fit:cover" onerror="this.remove()" />'
+            : h.name.charAt(0);
+          html += '<div class="hrow" data-id="'+h.id+'" onclick="focusPin(this)">'
+            +'<div class="hrow-ph" style="cursor:pointer" title="Rasmlarni ko\'rish" onclick="event.stopPropagation();openHallDetail('+h.id+')">'+phInner+'</div>'
+            +'<div class="hrow-info"><b>'+h.name+'</b>'
+            +'<span class="hr-rate">'+typeIcon(h.type)+' '+typeLabel(h.type)+' &nbsp; ★ '+(h.rev_avg||0)+' ('+(h.rev_cnt||0)+')'+' &nbsp; '+h.desc+'</span>'
+            +'<span class="hr-addr">📍 '+h.addr+(dist !== null ? ' · '+distText(dist) : '')+'</span></div></div>';
+        });
+      });
+      box.innerHTML = html || '<div class="hempty">Hech narsa topilmadi</div>';
+      updateHallsMap(list);
+      window._pinList = list;
+    }
+    /* ===== Hamkor so'rovi ===== */
+    function openPartnerReq(){ document.getElementById('reqMask').classList.add('show'); document.body.style.overflow='hidden'; }
+    function closeReq(){ document.getElementById('reqMask').classList.remove('show'); document.body.style.overflow=''; }
+    function closeReqBg(e){ if(e.target.id==='reqMask') closeReq(); }
+    function submitReq(e){
+      e.preventDefault();
+      var f = e.target;
+      var req = {
+        id: 'R' + Date.now(),
+        htype: f.htype.value,
+        bname: f.bname.value,
+        org: f.org.value,
+        owner: f.owner.value,
+        phone: f.phone.value,
+        addr: f.addr.value,
+        hours: f.hours.value,
+        biz: f.biz.value,
+        date: new Date().toLocaleString('uz-UZ'),
+        status: 'yangi'
+      };
+      var arr = [];
+      try{ arr = JSON.parse(localStorage.getItem('elgaku_partner_requests_v1') || '[]'); }catch(err){}
+      arr.push(req);
+      localStorage.setItem('elgaku_partner_requests_v1', JSON.stringify(arr));
+      // Серверга ҳам юборамиз (operator инбокси ўқийди)
+      var tmap = {fitness:'gym', bilyard:'bilyard', game:'game', basseyn:'basseyn', spa:'wellness', boshqa:'boshqa'};
+      fetch('/api/halls', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          name: f.bname.value,
+          owner: f.owner.value,
+          phone: f.phone.value,
+          branch: 1,
+          status: 'yangi',
+          commission: '',
+          login: '',
+          type: tmap[f.htype.value] || 'gym',
+          details: {
+            legalForm: f.org.value,
+            address: f.addr.value,
+            hours: f.hours.value,
+            desc: f.biz.value,
+            source: 'web',
+            date: new Date().toLocaleString('uz-UZ')
+          }
+        })
+      }).catch(function(){});
+      f.reset();
+      document.getElementById('reqFormBox').style.display='none';
+      document.getElementById('reqDoneBox').style.display='block';
+    }
+
+    /* ===== Join bo'limi — operator zallari ===== */
+    function renderJoinHalls(){
+      var all = readHallsData();
+      document.getElementById('joinCount').textContent = all.length;
+      var box = document.getElementById('joinHalls');
+      if(!box) return;
+      box.innerHTML = all.map(function(h){
+        var status = (h.type && h.type==='bilyard') ? "🎱" : (h.type==='game' ? "🎮" : (h.type==='basseyn' ? "🏊" : "🏋"));
+        return '<div class="jrow"><span class="jph">'+(h.name.charAt(0))+'</span>'
+          + '<span class="jinfo"><b>'+h.name+'</b><span>★ '+h.rating+' · '+h.desc+'</span></span>'
+          + '<span class="jstat">Faol</span></div>';
+      }).join('') || '<div class="hempty">Hozircha zallar qoshilmagan</div>';
+    }
+    renderJoinHalls();
+    loadLiveHalls();
+
+    function focusPin(el){
+      var rows = document.querySelectorAll('.hrow');
+      for(var k=0;k<rows.length;k++){ rows[k].classList.toggle('active', rows[k]===el); }
+    }
+
+    // ---------- Platformadagi markazlar (jonli API) ----------
+    var LH_TYPES = {gym:['🏋️','Sport zali'], game:['🎮','Kiberklub'], bilyard:['🎱','Bilyard'],
+                    karaoke:['🎤','Karaoke'], bouling:['🎳','Bouling'], kart:['🏎️','Go-kart'],
+                    wellness:['🧘','Wellness / SPA'], boshqa:['🏢','Markaz']};
+    var TF_LABELS = {area:'Maydon', capacity:"Bir vaqtdagi sig'im", equip:'Uskunalar',
+      classes:"Mashg'ulot turlari", coaches:'Murabbiylar', price:'Narx', pc:'Kompyuterlar',
+      rooms:'Xonalar', hourPrice:'Soatlik narx', peak:'Gavjum vaqt', tables:'Stollar',
+      roomCap:"Xona sig'imi", roomPrice:'Xona narxi', lanes:"Yo'laklar", tracks:'Trassalar',
+      services:'Xizmatlar', prices:'Narxlar', locker:'Garderob', shower:'Dush'};
+    function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+    var _lhAuto = null;
+    function stopLhAuto(){ if(_lhAuto){ clearInterval(_lhAuto); _lhAuto = null; } }
+    function startLhAutoAll(){
+      stopLhAuto();
+      var strips = document.querySelectorAll('.lh-strip');
+      if(!strips.length) return;
+      _lhAuto = setInterval(function(){
+        for(var j=0;j<strips.length;j++){
+          var g = strips[j];
+          var card = g.querySelector('.lh-card');
+          if(!card) continue;
+          var maxLeft = g.scrollWidth - g.clientWidth;
+          if(maxLeft <= 0) continue;
+          var step = card.offsetWidth + 20;
+          if(g.scrollLeft >= maxLeft - 5){ g.scrollTo({left: 0, behavior: 'smooth'}); }
+          else { g.scrollBy({left: step, behavior: 'smooth'}); }
+        }
+      }, 3200);
+    }
+    function lhScroll(id, d){
+      var g = document.getElementById(id);
+      if(!g) return;
+      var card = g.querySelector('.lh-card');
+      var step = card ? card.offsetWidth + 20 : 320;
+      g.scrollBy({left: d * step, behavior: 'smooth'});
+    }
+    var LH_PHOTOS = {
+      gym: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=720&auto=format&fit=crop',
+      wellness: 'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?q=80&w=720&auto=format&fit=crop',
+      karaoke: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=720&auto=format&fit=crop',
+      game: 'https://images.unsplash.com/photo-1547394765-185e1e68f34e?q=80&w=720&auto=format&fit=crop',
+      bilyard: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=720&auto=format&fit=crop',
+      bouling: 'https://images.unsplash.com/photo-1550167164-1b67c2be3d3e?q=80&w=720&auto=format&fit=crop',
+      kart: 'https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?q=80&w=720&auto=format&fit=crop',
+      boshqa: 'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=720&auto=format&fit=crop'
+    };
+    function openHallDetail(id){
+      var all = [];
+      try{ all = JSON.parse(localStorage.getItem('elgaku_halls_live') || '[]'); }catch(e){}
+      var h = null;
+      for(var i=0;i<all.length;i++){ if((all[i].id||0)===id){ h=all[i]; break; } }
+      if(!h){ return; }
+      var d = h.details || {};
+      var photos = d.photosList || [];
+      var tp = LH_TYPES[h.type] || ['🏢','Markaz'];
+      var cityLine = [d.city, d.district].filter(function(x){return x && String(x).trim();}).join(', ') || d.address || '';
+      var gal = photos.length
+        ? '<div style="display:flex;gap:8px;overflow-x:auto;margin:12px 0;padding-bottom:6px">'
+          + photos.map(function(p){ return '<img src="'+p+'" loading="lazy" onclick="window.open(this.src)" style="height:180px;border-radius:14px;object-fit:cover;cursor:zoom-in;border:1px solid #eee" onerror="this.remove()" />'; }).join('')
+          + '</div>'
+        : '<div style="color:#9CA3AF;font-size:13px;margin:12px 0">Hozircha rasmlar yuklanmagan</div>';
+      var box = document.createElement('div');
+      box.id = 'hallDetailBox';
+      box.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
+      box.onclick = function(e){ if(e.target===box) closeHallDetail(); };
+      box.innerHTML = '<div style="background:#fff;border-radius:20px;max-width:640px;width:100%;max-height:90vh;overflow:auto;padding:22px;position:relative;box-shadow:0 20px 60px rgba(0,0,0,.25)">'
+        + '<button onclick="closeHallDetail()" style="position:absolute;top:12px;right:14px;border:0;background:#F3F4F6;border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:15px">✕</button>'
+        + '<h3 style="margin:0 0 4px;font-size:20px">'+tp[0]+' '+esc(h.name)+'</h3>'
+        + '<div style="color:#6B7280;font-size:13px">'+esc(tp[1])+'</div>'
+        + gal
+        + (d.desc ? '<p style="font-size:14px;color:#374151;line-height:1.6">'+esc(d.desc)+'</p>' : '')
+        + (cityLine ? '<p style="font-size:13.5px;color:#374151;margin:4px 0">📍 '+esc(cityLine)+'</p>' : '')
+        + ((d.hours) ? '<p style="font-size:13.5px;color:#374151;margin:4px 0">🕐 '+esc(d.hours)+(d.hours24?' · 24/7':'')+'</p>' : '')
+        + '<p style="font-size:13.5px;color:#374151;margin:4px 0">📞 '+esc(h.phone||'—')+' &nbsp; ⭐ '+(h.rev_avg||0)+' ('+(h.rev_cnt||0)+' ta sharh)</p>'
+        + '<div id="hallObunalar" style="margin-top:14px;border-top:1px solid #EEF2F7;padding-top:12px"><div style="font-size:13px;color:#9CA3AF">Obunalar yuklanmoqda…</div></div>'
+        + '</div>';
+      document.body.appendChild(box);
+      document.body.style.overflow = 'hidden';
+      loadHallPublic(id);
+    }
+    function loadHallPublic(id){
+      fetch('/api/public/hall/'+id).then(function(r){ return r.json(); }).then(function(d){
+        var el = document.getElementById('hallObunalar');
+        if(!el) return;
+        if(!d || d.error || !d.hall){ el.innerHTML = '<div style="font-size:13px;color:#9CA3AF">Obunalar mavjud emas</div>'; return; }
+        var p = d.packages||[], m = d.memberships||[], s = d.schedule||[], a = d.announcements||[];
+        var h = '';
+        h += '<div style="font-weight:700;font-size:14px;margin-bottom:8px">🍱 Obunalar va paketlar</div>';
+        if(p.length){
+          h += p.map(function(x){
+            var old = x.old_price ? ' <s style="color:#9CA3AF;font-size:12px">'+fmtK(x.old_price)+'</s>' : '';
+            return '<div style="border:1px solid #EEF2F7;border-radius:12px;padding:10px 12px;margin-bottom:8px;background:#FAFBFC">'
+              + '<div style="font-weight:600;font-size:13.5px">'+esc(x.title||'')+' <span style="background:#F97316;color:#fff;border-radius:6px;padding:1px 7px;font-size:11px;font-weight:700">'+(x.months||1)+' oy</span></div>'
+              + (x.desc?'<div style="color:#6B7280;font-size:12.5px;margin-top:2px">'+esc(x.desc)+'</div>':'')
+              + '<div style="font-weight:800;color:#DC2626;font-size:14px;margin-top:6px">'+fmtK(x.price)+" so'm"+old+'</div></div>';
+          }).join('');
+        } else h += '<div style="color:#9CA3AF;font-size:13px;margin-bottom:8px">Hozircha faol paketlar yo\'q</div>';
+        if(m.length){
+          h += '<div style="font-weight:700;font-size:14px;margin:10px 0 8px">💳 Faol abonementlar ('+m.length+')</div>';
+          h += m.slice(0,6).map(function(x){
+            var sess = x.type==='sessiyali' ? (' · '+(x.sessions_used||0)+'/'+(x.sessions_total||0)+' sessiya') : ' · Cheksiz';
+            return '<div style="border:1px solid #EEF2F7;border-radius:12px;padding:8px 12px;margin-bottom:6px;background:#FAFBFC;font-size:13px">'
+              + '<b>'+esc(x.client||'')+'</b><span style="color:#6B7280">'+sess+'</span>'
+              + ' <span style="color:#374151;font-weight:700">'+fmtK(x.price)+" so'm</span>"
+              + (x.end ? ' <span style="color:#9CA3AF;font-size:12px">to '+esc(x.end)+'</span>' : '') + '</div>';
+          }).join('');
+        }
+        if(s.length){
+          h += '<div style="font-weight:700;font-size:14px;margin:10px 0 8px">🏋️ Dars jadvali</div>';
+          h += '<div style="font-size:13px">'+s.slice(0,8).map(function(x){
+            return '<div style="display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-bottom:1px dashed #EEF2F7">'
+              + '<span><b>'+esc(x.coach||'')+'</b> — '+esc(x.title||'')+'</span>'
+              + '<span style="color:#6B7280">'+esc(x.cdate||'')+' '+esc(x.ctime||'')+'</span></div>';
+          }).join('')+'</div>';
+        }
+        if(a.length){
+          h += '<div style="font-weight:700;font-size:14px;margin:10px 0 8px">📢 E\'lonlar</div>';
+          h += a.map(function(x){
+            return '<div style="font-size:13px;padding:5px 0"><b>'+esc(x.title||'')+'</b><br><span style="color:#6B7280">'+esc(x.body||'')+'</span></div>';
+          }).join('');
+        }
+        el.innerHTML = h;
+      }).catch(function(){
+        var el = document.getElementById('hallObunalar');
+        if(el) el.innerHTML = '<div style="font-size:13px;color:#9CA3AF">Obunalarni yuklab bo\'lmadi (server ishlayaptimi?)</div>';
+      });
+    }
+    function fmtK(n){ n = Number(n)||0; return n.toLocaleString('ru-RU'); }
+    function closeHallDetail(){
+      var b = document.getElementById('hallDetailBox');
+      if(b) b.remove();
+      document.body.style.overflow = '';
+    }
+    function lhCardHtml(h, i){
+      var d = h.details || {};
+      var tp = LH_TYPES[h.type] || ['🏢','Markaz'];
+      var dist = USER_LOC ? hallDistKm(h) : null;
+      var cityLine = [d.city, d.district].filter(function(x){ return x && String(x).trim(); }).join(', ');
+      if(!cityLine && d.address) cityLine = String(d.address);
+      var addrText = cityLine ? '📍 ' + cityLine : (d.desc || '');
+      var photos = d.photosList || [];
+      var ph = (photos.length ? photos[0] : null) || d.logo || LH_PHOTOS[h.type];
+      var img = ph ? '<img src="'+ph+'" alt="" loading="lazy" onerror="this.style.display=\'none\'" />' : '';
+      var h24 = d.hours24 || (String(d.hours||'').toLowerCase().indexOf('24/7')>=0) ? '<span class="lh-247">24/7</span>' : '';
+      return '<div class="lh-card" onclick="openHallDetail('+(h.id||0)+')" role="button" tabindex="0" title="Tafsilotni ko\'rish">'+
+        '<div class="lh-photo '+esc(h.type||'boshqa')+'">'+
+          '<span class="lh-photo-ic">'+tp[0]+'</span>'+
+          img+
+          '<span class="lh-badge">'+esc(tp[1])+'</span>'+
+          '<span class="lh-rating">★ '+(h.rev_avg||0)+'</span>'+
+          h24+
+        '</div>'+
+        '<div class="lh-body">'+
+          '<div class="lh-name">'+esc(h.name)+'</div>'+
+          (addrText?'<div class="lh-addr">'+esc(addrText)+'</div>':'')+
+          '<div class="lh-foot">'+
+            '<span class="lh-comments"><b>'+(h.rev_cnt||0)+'</b> ta sharh</span>'+
+            (dist!==null?'<span class="lh-dist-mini">📍 '+distText(dist)+'</span>':'')+
+          '</div>'+
+        '</div></div>';
+    }
+    function fillStrip(el, list){
+      if(!el) return;
+      el.innerHTML = list.map(lhCardHtml).join('') || '<div class="lh-empty">Hozircha markazlar yo\'q</div>';
+      el.onmouseenter = stopLhAuto;
+      el.onmouseleave = startLhAutoAll;
+      el.ontouchstart = stopLhAuto;
+    }
+    function renderHalls(list){
+      list = (list||[]).filter(function(h){return h.status==='active';});
+      list = list.filter(cityFilter);
+      list.sort(function(a,b){
+        if((b.rev_cnt||0) !== (a.rev_cnt||0)) return (b.rev_cnt||0) - (a.rev_cnt||0);
+        if((b.rev_avg||0) !== (a.rev_avg||0)) return (b.rev_avg||0) - (a.rev_avg||0);
+        return (b.id||0)-(a.id||0);
+      });
+      var sport = list.filter(function(h){ return h.type==='gym' || h.type==='wellness'; });
+      var fun = list.filter(function(h){ return h.type!=='gym' && h.type!=='wellness'; });
+      var sc = document.getElementById('sportCount');
+      if(sc) sc.textContent = sport.length;
+      var fc = document.getElementById('funCount');
+      if(fc) fc.textContent = fun.length;
+      fillStrip(document.getElementById('lhRowSport'), sport);
+      fillStrip(document.getElementById('lhRowFun'), fun);
+      startLhAutoAll();
+    }
+    function loadHallsOld(){
+      fetch('/api/halls', {cache:'no-store'})
+        .then(function(r){ return r.json(); })
+        .then(function(list){
+          renderHalls(list);
+          var hc = document.getElementById('heroHallCount');
+          if(hc) hc.textContent = list.length + '+';
+          var lc = document.getElementById('liveHallCount');
+          if(lc) lc.textContent = list.length + '+';
+        })
+        .catch(function(){
+          var g = document.getElementById('lhRowSport');
+          if(g) g.innerHTML = '<div class="lh-empty">Server bilan bog\'lanish yo\'q. (server.py ishlayaptimi?)</div>';
+        });
+    }
+    loadHallsOld();
+    setInterval(loadHallsOld, 10000);
+    document.addEventListener('visibilitychange', function(){ if(!document.hidden) loadHallsOld(); });
+    try{ applyLang(); }catch(e){}
+  </script>
+</body>
+</html>
