@@ -1161,6 +1161,28 @@ class Handler(BaseHTTPRequestHandler):
             db.close()
             return self.json(200, {"ok": True, "phone": phone, "message": "Xush kelibsiz"})
 
+        # ── APK: musiqa ro'yxati (sport ekrani — musiqa bo'limi) ──
+        # Serverdagi /music papkasidagi fayllarni o'zi topib ro'yxat beradi.
+        # Yangi musiqa qo'shish: /music ichiga mp3/wav/m4a tashlash kifoya.
+        if path == "/api/apk/music" and self.command == "GET":
+            mdir = os.path.join(ROOT, "music")
+            tracks = []
+            try:
+                for fn in sorted(os.listdir(mdir)):
+                    if fn.lower().endswith((".mp3", ".wav", ".m4a", ".ogg", ".aac", ".flac")):
+                        full = os.path.join(mdir, fn)
+                        if os.path.isfile(full):
+                            title = os.path.splitext(fn)[0].replace("_", " ")
+                            tracks.append({
+                                "id": fn,
+                                "title": title,
+                                "url": "/music/" + fn,
+                                "size": os.path.getsize(full),
+                            })
+            except OSError:
+                pass
+            return self.json(200, tracks)
+
         if path == "/api/apk/users" and self.command == "GET":
             u = self.current_user()
             if not (u and (u.get("super") or u.get("role") in ("CEO", "Operator"))):
