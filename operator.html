@@ -603,6 +603,7 @@
       <button class="sb-item title="Hisob-fakturalar" data-view="invoices" onclick="showView('invoices')"><span class="ic">🧾</span> <span data-i18n="sb.invoices">Hisob-fakturalar</span></button>
       <button class="sb-item title="Korporativ mijozlar" data-view="corporate" onclick="showView('corporate')"><span class="ic">💼</span> <span data-i18n="sb.corporate">Korporativ mijozlar</span></button>
       <button class="sb-item title="APK ilovada ro'yxatdan o'tgan foydalanuvchilar" data-view="apkusers" onclick="showView('apkusers'); loadApkUsers()"><span class="ic">📱</span> <span>APK Sayt foydalanuvchilari</span></button>
+      <button class="sb-item title="APK sport musiqa bo'limi" data-view="apkmusic" onclick="showView('apkmusic'); loadApkMusic()"><span class="ic">🎵</span> <span>APK Musiqa</span></button>
       <button class="sb-item" data-view="support" title="Qo'llab-quvvatlash (1226)" onclick="showView('support')"><span class="ic">🎧</span> <span data-i18n="sb.support">Qo'llab-quvvatlash (1226)</span></button>
       <button class="sb-item" data-view="monitoring" title="Xodimlar bilan ishlash" onclick="showView('monitoring')"><span class="ic">👥</span> <span data-i18n="sb.monitoring">Xodimlar bilan ishlash</span></button>
       <button class="sb-item" data-view="stats" title="Barcha zallar statistikasi" onclick="showView('stats')"><span class="ic">📈</span> <span data-i18n="sb.stats">Barcha zallar statistikasi</span></button>
@@ -1446,6 +1447,40 @@
           </thead>
           <tbody id="apkusers-tbody">
             <tr><td colspan="7" style="text-align:center;color:#888;padding:24px">Yuklanmoqda...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- View: APK Musiqa -->
+    <div class="content view" id="view-apkmusic">
+      <div class="card cta-top">
+        <div class="cta-top-row">
+          <div>
+            <h2>🎵 APK Musiqa bo'limi</h2>
+            <p class="desc">Sport ekranidagi musiqa ro'yxatiga trek yuklang. Yuklangan treklar APK foydalanuvchilariga darhol ko'rinadi.</p>
+          </div>
+          <button class="btn btn-orange" onclick="loadApkMusic()">🔄 Yangilash</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Yangi trek yuklash</h3>
+        <p class="desc">MP3 / WAV / M4A — maksimal 50MB.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px">
+          <input type="file" id="music-file" accept=".mp3,.wav,.m4a,.ogg,.aac,.flac" style="padding:8px;border:1px solid #ddd;border-radius:8px">
+          <button class="btn btn-green" onclick="uploadApkMusic()">⬆ Yuklash</button>
+          <span id="music-upload-msg" style="color:#13C46A;font-weight:bold"></span>
+        </div>
+      </div>
+
+      <div class="card table-card">
+        <table class="hall-table">
+          <thead>
+            <tr><th>#</th><th>Nomi</th><th>Hajmi</th><th>URL</th><th></th></tr>
+          </thead>
+          <tbody id="apkmusic-tbody">
+            <tr><td colspan="5" style="text-align:center;color:#888;padding:24px">Yuklanmoqda...</td></tr>
           </tbody>
         </table>
       </div>
@@ -8399,7 +8434,68 @@ var STICKERS=[["ss001","😀"], ["ss002","😁"], ["ss003","😂"], ["ss004","�
         tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#c00;padding:24px">Tarmoq xatosi: ' + e.message + '</td></tr>';
       }
     }
-    // Бетни қайта юклаганда ҳам жорий бўлимда қолиш
+
+    // ===== APK Musiqa =====
+    async function loadApkMusic() {
+      const tbody = document.getElementById('apkmusic-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#888;padding:24px">Yuklanmoqda...</td></tr>';
+      try {
+        const r = await fetch('/api/apk/music', { headers: { 'X-Elgaku-Login': (localStorage.getItem('elgaku_login')||'operator') } });
+        if (!r.ok) { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#c00;padding:24px">Xatolik: HTTP ' + r.status + '</td></tr>'; return; }
+        const tracks = await r.json();
+        if (!tracks.length) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#888;padding:24px">Hali musiqa yo\'q. Yuqoridan trek yuklang.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = tracks.map((t, i) => {
+          const kb = (t.size/1024).toFixed(0);
+          return '<tr>'
+            + '<td>' + (i+1) + '</td>'
+            + '<td style="font-weight:600">🎵 ' + (t.title||t.id) + '</td>'
+            + '<td>' + kb + ' KB</td>'
+            + '<td><a href="' + t.url + '" target="_blank" style="color:#13C46A">' + t.url + '</a></td>'
+            + '<td><button class="btn" style="background:#FEE2E2;color:#B91C1C;padding:6px 12px" onclick="delApkMusic(\'' + t.id + '\')">O\'chirish</button></td>'
+            + '</tr>';
+        }).join('');
+      } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#c00;padding:24px">Tarmoq xatosi: ' + e.message + '</td></tr>';
+      }
+    }
+
+    async function uploadApkMusic() {
+      const fi = document.getElementById('music-file');
+      const msg = document.getElementById('music-upload-msg');
+      if (!fi || !fi.files || !fi.files[0]) { msg.textContent = 'Avval fayl tanlang'; msg.style.color = '#B91C1C'; return; }
+      const f = fi.files[0];
+      msg.style.color = '#13C46A'; msg.textContent = 'Yuklanmoqda...';
+      try {
+        const r = await fetch('/api/apk/music/upload', {
+          method: 'POST',
+          headers: {
+            'X-Elgaku-Login': (localStorage.getItem('elgaku_login')||'operator'),
+            'Content-Type': f.type || 'audio/mpeg',
+            'X-Filename': f.name
+          },
+          body: f
+        });
+        const j = await r.json();
+        if (r.ok) { msg.textContent = '✅ Yuklandi: ' + (j.filename||f.name); fi.value = ''; loadApkMusic(); }
+        else { msg.textContent = 'Xato: ' + (j.error||r.status); msg.style.color = '#B91C1C'; }
+      } catch (e) { msg.textContent = 'Tarmoq xatosi: ' + e.message; msg.style.color = '#B91C1C'; }
+    }
+
+    async function delApkMusic(fn) {
+      if (!confirm('"' + fn + '" o\'chirilsinmi?')) return;
+      try {
+        await fetch('/api/apk/music/delete/' + encodeURIComponent(fn), {
+          method: 'POST',
+          headers: { 'X-Elgaku-Login': (localStorage.getItem('elgaku_login')||'operator') }
+        });
+        loadApkMusic();
+      } catch (e) { alert('Xato: ' + e.message); }
+    }
+
     (function(){
       try{
         var saved = localStorage.getItem('elgaku_view');

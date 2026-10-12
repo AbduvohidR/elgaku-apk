@@ -1183,6 +1183,56 @@ class Handler(BaseHTTPRequestHandler):
                 pass
             return self.json(200, tracks)
 
+        # ── APK: musiqa yuklash (operator panelidan) ──
+        if path == "/api/apk/music/upload" and self.command == "POST":
+            u = self.current_user()
+            if not (u and (u.get("super") or u.get("role") in ("CEO", "Operator"))):
+                return self.json(403, {"error": "Faqat operator huquqi"})
+            try:
+                length = int(self.headers.get("Content-Length", "0"))
+                if length <= 0 or length > 50 * 1024 * 1024:
+                    return self.json(400, {"error": "Fayl hajmi 0 dan 50MB gacha bo'lsin"})
+                ctype = self.headers.get("Content-Type", "")
+                fname = self.headers.get("X-Filename", "").strip()
+                # xavfsiz fayl nomi
+                import re as _re
+                fname = _re.sub(r"[^A-Za-z0-9._-]", "_", fname)
+                if not fname or "." not in fname:
+                    fname = "track_%d.mp3" % int(time.time())
+                ext = fname.rsplit(".", 1)[-1].lower()
+                if ext not in ("mp3", "wav", "m4a", "ogg", "aac", "flac"):
+                    return self.json(400, {"error": "Faqat audio fayllar (mp3/wav/m4a/...)"})
+                mdir = os.path.join(ROOT, "music")
+                os.makedirs(mdir, exist_ok=True)
+                data = self.rfile.read(length)
+                fpath = os.path.join(mdir, fname)
+                with open(fpath, "wb") as f:
+                    f.write(data)
+                audit(u.get("login") or "?", u.get("role") or "Operator", "music_upload", fname,
+                      "Operator musiqa yukladi: %s (%d bayt)" % (fname, len(data)))
+                return self.json(200, {"ok": True, "filename": fname, "size": len(data)})
+            except Exception as e:
+                return self.json(500, {"error": str(e)})
+
+        # ── APK: musiqani o'chirish ──
+        if path.startswith("/api/apk/music/delete/") and self.command == "POST":
+            u = self.current_user()
+            if not (u and (u.get("super") or u.get("role") in ("CEO", "Operator"))):
+                return self.json(403, {"error": "Faqat operator huquqi"})
+            fn = path.rsplit("/", 1)[-1]
+            import re as _re
+            fn = _re.sub(r"[^A-Za-z0-9._-]", "", fn)
+            fpath = os.path.join(ROOT, "music", fn)
+            try:
+                if os.path.isfile(fpath):
+                    os.remove(fpath)
+                    audit(u.get("login") or "?", u.get("role") or "Operator", "music_delete", fn,
+                          "Operator musiqani o'chirdi: " + fn)
+                    return self.json(200, {"ok": True})
+                return self.json(404, {"error": "Fayl topilmadi"})
+            except Exception as e:
+                return self.json(500, {"error": str(e)})
+
         if path == "/api/apk/users" and self.command == "GET":
             u = self.current_user()
             if not (u and (u.get("super") or u.get("role") in ("CEO", "Operator"))):
